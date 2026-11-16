@@ -4,7 +4,7 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <meta name="theme-color" content="#050507" />
-  <title>Quest Runner — Discord Automation</title>
+  <title>Vinhxhub v0.01 — Discord Quest Automation</title>
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet" />
@@ -17,12 +17,15 @@
     <div class="topbar-inner">
       <div class="brand">
         <span class="brand-mark" aria-hidden="true">
-          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
-            <polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"></polygon>
+          <svg width="24" height="24" viewBox="0 0 36 32" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <path d="M5 0H31C33.7614 0 36 2.23858 36 5V21C36 23.7614 33.7614 26 31 26H13L5 32V26H5C2.23858 26 0 23.7614 0 21V5C0 2.23858 2.23858 0 5 0Z" fill="#5865F2"/>
+            <path d="M12.5 8.5L7.5 13L12.5 17.5" stroke="#FFFFFF" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/>
+            <path d="M23.5 8.5L28.5 13L23.5 17.5" stroke="#FFFFFF" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/>
+            <path d="M19.8 7.5L16.2 18.5" stroke="#43E97B" stroke-width="2.4" stroke-linecap="round"/>
           </svg>
         </span>
-        <span class="brand-name" translate="no">Quest Runner</span>
-        <span class="brand-tag" translate="no">v3.1</span>
+        <span class="brand-name" translate="no">Vinhxhub</span>
+        <span class="brand-tag" translate="no">v0.01</span>
       </div>
 
       <nav class="nav-tabs" aria-label="Điều hướng chính">
@@ -54,7 +57,7 @@
             <span class="user-build" id="user-build-info" translate="no">Build —</span>
           </div>
         </div>
-        <button type="button" class="btn-ghost-sm" id="btn-logout" title="Đăng xuất và xóa token khỏi RAM">
+        <button type="button" class="btn-ghost-sm" id="btn-logout" title="Đăng xuất">
           <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
             <path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"></path>
             <polyline points="16 17 21 12 16 7"></polyline>
@@ -74,7 +77,7 @@
           <div class="auth-header">
             <div class="status-chip">
               <span class="dot dot-emerald"></span>
-              <span>Phiên làm việc RAM — Không lưu đĩa</span>
+              <span>Token chỉ dùng tạm thời, không lưu lại</span>
             </div>
             <h1 id="auth-title">Xác thực Discord Token</h1>
             <p class="muted">
@@ -114,11 +117,11 @@
           <div class="security-grid">
             <div class="sec-item">
               <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
-                <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"></path>
+                <polyline points="20 6 9 17 4 12"></polyline>
               </svg>
               <div>
-                <strong>Zero Persistence</strong>
-                <span>Token chỉ tồn tại trên bộ nhớ tạm và tự xóa khi đăng xuất.</span>
+                <strong>Auto-Accept &amp; Scan</strong>
+                <span>Tự động quét và nhận các Quest khả dụng trên tài khoản.</span>
               </div>
             </div>
             <div class="sec-item">
@@ -127,7 +130,7 @@
               </svg>
               <div>
                 <strong>Safe Turbo Engine</strong>
-                <span>Chạy song song có jitter và tự động lùi khi gặp HTTP 429.</span>
+                <span>Chạy song song có độ trễ an toàn và tự lùi khi gặp HTTP 429.</span>
               </div>
             </div>
           </div>
