@@ -1,0 +1,16 @@
+{
+  "name": "discord-quest-completer-web",
+  "version": "1.0.0",
+  "description": "High-speed, rate-limit-safe Discord Quest Auto-Completer web application with VietQR Donate page",
+  "main": "server.js",
+  "scripts": {
+    "start": "node server.js",
+    "dev": "node --watch server.js"
+  },
+  "engines": {
+    "node": ">=18.0.0"
+  },
+  "dependencies": {
+    "express": "^4.21.2"
+  }
+}
