@@ -8,6 +8,18 @@ const API_BASE = 'https://discord.com/api/v9';
 const FALLBACK_BUILD_NUMBER = 504649;
 const BUILD_CACHE_TTL_MS = 60 * 60 * 1000; // 1 hour
 
+// Badge Spoofer constants (from spoofer.py)
+const SCIENCE_PROPERTIES_URL = 'https://cordapi.dolfi.es/api/v2/properties/windows';
+const GAMES_CDN_URL = 'https://cdn.discordapp.com/detectables/games.json';
+const SPOOFER_CLIENT_VERSION = '1.0.9253';
+const SPOOFER_BUILD_NUMBER = 594031;
+const SPOOFER_NATIVE_BUILD = 88414;
+const SPOOFER_OS_VERSION = '10.0.26200';
+const SPOOFER_USER_AGENT =
+  'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) discord/1.0.9253 Chrome/148.0.7778.280 Electron/42.7.1 Safari/537.36';
+const SPOOFER_BATCH_SIZE = 50;
+const SPOOFER_BATCH_DELAY_MS = 1000;
+
 const SUPPORTED_TASKS = [
   'WATCH_VIDEO',
   'PLAY_ON_DESKTOP',
@@ -16,37 +28,16 @@ const SUPPORTED_TASKS = [
   'WATCH_VIDEO_ON_MOBILE',
 ];
 
-const SPEED_PROFILES = {
-  turbo: {
-    label: 'Safe Turbo',
-    parallel: true,
-    videoSpeed: 9,
-    videoIntervalMs: 850,
-    maxFuture: 10,
-    heartbeatIntervalMs: 16500,
-    heartbeatJitterMs: 1500,
-    enrollDelayMs: 900,
-  },
-  standard: {
-    label: 'Standard',
-    parallel: true,
-    videoSpeed: 7,
-    videoIntervalMs: 1000,
-    maxFuture: 10,
-    heartbeatIntervalMs: 20000,
-    heartbeatJitterMs: 500,
-    enrollDelayMs: 3000,
-  },
-  safe: {
-    label: 'Ultra-Safe',
-    parallel: false,
-    videoSpeed: 5,
-    videoIntervalMs: 1200,
-    maxFuture: 9,
-    heartbeatIntervalMs: 25000,
-    heartbeatJitterMs: 2000,
-    enrollDelayMs: 3500,
-  },
+// Default Parallel Safe Turbo profile
+const DEFAULT_PROFILE = {
+  label: 'Parallel Safe Turbo',
+  parallel: true,
+  videoSpeed: 9,
+  videoIntervalMs: 850,
+  maxFuture: 10,
+  heartbeatIntervalMs: 16500,
+  heartbeatJitterMs: 1500,
+  enrollDelayMs: 900,
 };
 
 const USER_AGENT =
@@ -57,10 +48,15 @@ let cachedBuildNumber = {
   fetchedAt: 0,
 };
 
+let cachedGames = {
+  list: [],
+  fetchedAt: 0,
+};
+
 // In-memory ephemeral sessions (never written to disk)
 const sessions = new Map();
 
-app.use(express.json({ limit: '64kb' }));
+app.use(express.json({ limit: '128kb' }));
 
 // Security headers
 app.use((req, res, next) => {
@@ -201,7 +197,7 @@ async function discordRequest(session, method, endpoint, body = null, signal = n
   return { status: res.status, ok: res.ok, data: json, raw: text };
 }
 
-// ─── Quest Parsers (camelCase & snake_case) ──────────────────────────────────
+// ─── Quest Parsers ───────────────────────────────────────────────────────────
 
 function pick(obj, ...keys) {
   if (!obj || typeof obj !== 'object') return undefined;
@@ -338,7 +334,15 @@ function pushLog(session, level, message, questId = null) {
   });
 }
 
-// ─── Quest Runner Engine ─────────────────────────────────────────────────────
+function pushSpoofLog(session, level, message) {
+  emitEvent(session, 'spoofer_log', {
+    ts: new Date().toLocaleTimeString('vi-VN', { hour12: false }),
+    level,
+    message,
+  });
+}
+
+// ─── Quest Runner Engine (Default Parallel) ──────────────────────────────────
 
 async function enrollQuest(session, quest, signal) {
   const name = getQuestName(quest);
@@ -531,7 +535,6 @@ async function runHeartbeatQuest(session, quest, profile, signal) {
     await sleep(Math.max(10000, profile.heartbeatIntervalMs + jitter), signal);
   }
 
-  // Send terminal: true on stop/completion
   await discordRequest(
     session,
     'POST',
@@ -540,16 +543,15 @@ async function runHeartbeatQuest(session, quest, profile, signal) {
   ).catch(() => {});
 }
 
-async function startRunner(session, { speedMode = 'turbo', autoAccept = true, questIds = null }) {
+async function startRunner(session, { questIds = null } = {}) {
   if (session.running) return;
-  const profile = SPEED_PROFILES[speedMode] || SPEED_PROFILES.turbo;
+  const profile = DEFAULT_PROFILE;
   const abortController = new AbortController();
   session.running = true;
   session.abortController = abortController;
-  session.speedMode = speedMode;
 
-  emitEvent(session, 'runner_state', { running: true, speedMode });
-  pushLog(session, 'info', `Khởi chạy engine chế độ ${profile.label} (${profile.parallel ? 'Song song' : 'Tuần tự'})`);
+  emitEvent(session, 'runner_state', { running: true });
+  pushLog(session, 'info', `Khởi chạy engine (${profile.label})`);
 
   try {
     let res = await discordRequest(session, 'GET', '/quests/@me', null, abortController.signal);
@@ -567,27 +569,25 @@ async function startRunner(session, { speedMode = 'turbo', autoAccept = true, qu
 
     let quests = Array.isArray(res.data) ? res.data : res.data?.quests || [];
 
-    if (autoAccept) {
-      const unaccepted = quests.filter(
-        (q) =>
-          !isEnrolled(q) &&
-          !isCompleted(q) &&
-          isCompletable(q) &&
-          (!questIds || questIds.includes(q.id))
-      );
+    const unaccepted = quests.filter(
+      (q) =>
+        !isEnrolled(q) &&
+        !isCompleted(q) &&
+        isCompletable(q) &&
+        (!questIds || questIds.includes(q.id))
+    );
 
-      if (unaccepted.length > 0) {
-        pushLog(session, 'info', `Tìm thấy ${unaccepted.length} quest chưa nhận — đang auto-accept...`);
-        for (const q of unaccepted) {
-          if (abortController.signal.aborted) break;
-          await enrollQuest(session, q, abortController.signal);
-          await sleep(profile.enrollDelayMs, abortController.signal);
-        }
-        await sleep(1000, abortController.signal);
-        const refreshed = await discordRequest(session, 'GET', '/quests/@me', null, abortController.signal);
-        if (refreshed.ok) {
-          quests = Array.isArray(refreshed.data) ? refreshed.data : refreshed.data?.quests || [];
-        }
+    if (unaccepted.length > 0) {
+      pushLog(session, 'info', `Tìm thấy ${unaccepted.length} quest chưa nhận — đang tự động nhận...`);
+      for (const q of unaccepted) {
+        if (abortController.signal.aborted) break;
+        await enrollQuest(session, q, abortController.signal);
+        await sleep(profile.enrollDelayMs, abortController.signal);
+      }
+      await sleep(1000, abortController.signal);
+      const refreshed = await discordRequest(session, 'GET', '/quests/@me', null, abortController.signal);
+      if (refreshed.ok) {
+        quests = Array.isArray(refreshed.data) ? refreshed.data : refreshed.data?.quests || [];
       }
     }
 
@@ -604,10 +604,10 @@ async function startRunner(session, { speedMode = 'turbo', autoAccept = true, qu
       return;
     }
 
-    pushLog(session, 'info', `Đang xử lý ${actionable.length} quest...`);
+    pushLog(session, 'info', `Đang chạy song song ${actionable.length} quest...`);
 
     const executeOne = async (q, index) => {
-      if (profile.parallel && index > 0) {
+      if (index > 0) {
         await sleep(index * randomInt(350, 650), abortController.signal);
       }
       const taskType = getTaskType(q);
@@ -622,14 +622,7 @@ async function startRunner(session, { speedMode = 'turbo', autoAccept = true, qu
       }
     };
 
-    if (profile.parallel) {
-      await Promise.allSettled(actionable.map((q, idx) => executeOne(q, idx)));
-    } else {
-      for (let i = 0; i < actionable.length; i++) {
-        if (abortController.signal.aborted) break;
-        await executeOne(actionable[i], i);
-      }
-    }
+    await Promise.allSettled(actionable.map((q, idx) => executeOne(q, idx)));
 
     if (!abortController.signal.aborted) {
       pushLog(session, 'ok', 'Đã hoàn tất toàn bộ hàng đợi quest.');
@@ -641,7 +634,322 @@ async function startRunner(session, { speedMode = 'turbo', autoAccept = true, qu
   } finally {
     session.running = false;
     session.abortController = null;
-    emitEvent(session, 'runner_state', { running: false, speedMode });
+    emitEvent(session, 'runner_state', { running: false });
+  }
+}
+
+// ─── Badge Spoofer Engine (/api/v9/science) ──────────────────────────────────
+
+async function loadDetectableGames() {
+  const now = Date.now();
+  if (cachedGames.list.length > 0 && now - cachedGames.fetchedAt < BUILD_CACHE_TTL_MS) {
+    return cachedGames.list;
+  }
+
+  const res = await fetch(GAMES_CDN_URL, {
+    headers: { 'User-Agent': 'Mozilla/5.0' },
+  });
+  if (!res.ok) throw new Error(`Không tải được danh sách game (HTTP ${res.status})`);
+  const data = await res.json();
+  const games = [];
+  const seen = new Set();
+
+  for (const entry of data) {
+    const gid = String(entry.id || '');
+    if (!/^\d+$/.test(gid) || seen.has(gid)) continue;
+    const winExe = (entry.executables || []).find((e) => e.os === 'win32' && e.name);
+    if (!winExe) continue;
+    seen.add(gid);
+    games.push({
+      id: gid,
+      name: entry.name || 'Unknown',
+      exe: winExe.name,
+    });
+  }
+
+  cachedGames = { list: games, fetchedAt: Date.now() };
+  return games;
+}
+
+async function buildSpooferSuperProps(launchSignature, heartbeatSession) {
+  let props;
+  try {
+    const res = await fetch(SCIENCE_PROPERTIES_URL, {
+      method: 'POST',
+      headers: { 'content-type': 'application/json', 'user-agent': SPOOFER_USER_AGENT },
+      body: '{}',
+    });
+    if (res.ok) {
+      const json = await res.json();
+      props = json.properties;
+    }
+  } catch {
+    // fallback below
+  }
+
+  if (!props) {
+    props = {
+      os: 'Windows',
+      browser: 'Discord Client',
+      release_channel: 'stable',
+      client_version: SPOOFER_CLIENT_VERSION,
+      os_version: SPOOFER_OS_VERSION,
+      os_arch: 'x64',
+      app_arch: 'x64',
+      system_locale: 'en-GB',
+      has_client_mods: false,
+      browser_user_agent: SPOOFER_USER_AGENT,
+      browser_version: '42.7.1',
+      os_sdk_version: '26200',
+      client_build_number: SPOOFER_BUILD_NUMBER,
+      native_build_number: SPOOFER_NATIVE_BUILD,
+      client_event_source: null,
+      client_app_state: 'focused',
+    };
+  }
+
+  props.client_launch_id = crypto.randomUUID();
+  props.launch_signature = launchSignature;
+  props.client_heartbeat_session_id = heartbeatSession;
+  return Buffer.from(JSON.stringify(props)).toString('base64');
+}
+
+async function fetchAnalyticsToken(token, superProps) {
+  const res = await fetch(`${API_BASE}/users/@me?with_analytics_token=true`, {
+    headers: {
+      authorization: token,
+      'user-agent': SPOOFER_USER_AGENT,
+      'x-super-properties': superProps,
+    },
+  });
+  if (!res.ok) {
+    throw new Error(`Token bị từ chối khi lấy analytics_token (HTTP ${res.status})`);
+  }
+  const data = await res.json();
+  if (!data.analytics_token) {
+    throw new Error('Không tìm thấy analytics_token trong phản hồi Discord');
+  }
+  return data.analytics_token;
+}
+
+function buildGameScienceEvents(game, durationMs, ctx) {
+  const sid = crypto.randomUUID();
+  const now = Date.now();
+  const start = Math.max(0, now - durationMs);
+
+  const nextSeq = () => {
+    ctx.seq += 1;
+    return ctx.seq;
+  };
+
+  const hbInitial = {
+    type: 'running_game_heartbeat',
+    properties: {
+      client_track_timestamp: start,
+      client_heartbeat_session_id: ctx.heartbeatSession,
+      event_sequence_number: nextSeq(),
+      game_id: game.id,
+      game_name: game.name,
+      game_metadata: null,
+      game_executable: game.exe,
+      game_detection_enabled: true,
+      initial_heartbeat: true,
+      final_heartbeat: false,
+      game_session_id: sid,
+      duration_tracked_ms: 0,
+      rtc_connection_id: null,
+      media_session_id: null,
+      launch_signature: ctx.launchSignature,
+      client_app_state: 'focused',
+      client_send_timestamp: start,
+    },
+  };
+
+  const launchProps = {
+    client_track_timestamp: now,
+    client_heartbeat_session_id: ctx.heartbeatSession,
+    event_sequence_number: nextSeq(),
+    game: game.name,
+    game_id: game.id,
+    verified: true,
+    elevated: false,
+    is_launcher: false,
+    game_platform: 'desktop',
+    detection_method: 'verified_game',
+    is_overlay_enabled: false,
+    is_overlay_game_enabled: true,
+    is_overlay_game_source: 'OOP_DEFAULT_DATABASE',
+    fullscreen_type: 'UNKNOWN',
+    hardware_display_count: 1,
+    overlay_method: 'Disabled',
+    activity_status_enabled: true,
+    activity_status_shared_guilds: [],
+    current_user_status: 'online',
+    game_detection_enabled: true,
+    executable_path: game.exe,
+    voice_channel_id: null,
+    voice_channel_type: null,
+    voice_channel_bitrate: null,
+    voice_channel_guild_id: null,
+    hidden_by_distributor: false,
+    game_metadata: null,
+    client_performance_cpu: null,
+    client_performance_memory: null,
+    cpu_core_count: null,
+    accessibility_features: 0,
+    rendered_locale: 'en-GB',
+    launch_signature: ctx.launchSignature,
+    client_rtc_state: null,
+    client_app_state: 'focused',
+    client_send_timestamp: now,
+  };
+  if (ctx.fingerprint) {
+    launchProps.executable_fingerprint = ctx.fingerprint;
+  }
+
+  const hbFinal = {
+    type: 'running_game_heartbeat',
+    properties: {
+      client_track_timestamp: now,
+      client_heartbeat_session_id: ctx.heartbeatSession,
+      event_sequence_number: nextSeq(),
+      game_id: game.id,
+      game_name: game.name,
+      game_metadata: null,
+      game_executable: game.exe,
+      game_detection_enabled: true,
+      initial_heartbeat: false,
+      final_heartbeat: true,
+      game_session_id: sid,
+      duration_tracked_ms: durationMs,
+      rtc_connection_id: null,
+      media_session_id: null,
+      launch_signature: ctx.launchSignature,
+      client_app_state: 'focused',
+      client_send_timestamp: now,
+    },
+  };
+
+  return [hbInitial, { type: 'launch_game', properties: launchProps }, hbFinal];
+}
+
+async function startBadgeSpoofer(session, { gameCount, hoursPerGame, cookie = '', fingerprint = '' }) {
+  if (session.spooferRunning) return;
+  const ac = new AbortController();
+  session.spooferRunning = true;
+  session.spooferAbort = ac;
+
+  emitEvent(session, 'spoofer_state', { running: true });
+  pushSpoofLog(session, 'info', 'Đang khởi tạo phiên Badge Spoofer (/api/v9/science)...');
+
+  try {
+    const games = await loadDetectableGames();
+    if (games.length === 0) {
+      pushSpoofLog(session, 'error', 'Không tải được danh sách game từ Discord CDN.');
+      return;
+    }
+
+    const count = Math.min(games.length, Math.max(1, Number(gameCount) || games.length));
+    const hours = Math.max(0.01, Number(hoursPerGame) || 1);
+    const durationMs = Math.round(hours * 3600 * 1000);
+    const selected = games.slice(0, count);
+
+    const heartbeatSession = crypto.randomUUID();
+    const launchSignature = crypto.randomUUID();
+    const superProps = await buildSpooferSuperProps(launchSignature, heartbeatSession);
+    const analyticsToken = await fetchAnalyticsToken(session.token, superProps);
+
+    pushSpoofLog(
+      session,
+      'info',
+      `Bắt đầu spoof ${count} game × ${hours}h (${(count * hours).toLocaleString('vi-VN')}h tổng cộng)`
+    );
+
+    const ctx = {
+      heartbeatSession,
+      launchSignature,
+      superProps,
+      fingerprint: fingerprint.trim(),
+      seq: 0,
+    };
+
+    let sentOk = 0;
+    const totalBatches = Math.ceil(selected.length / SPOOFER_BATCH_SIZE);
+
+    for (let i = 0; i < selected.length; i += SPOOFER_BATCH_SIZE) {
+      if (ac.signal.aborted) break;
+      const batchNo = Math.floor(i / SPOOFER_BATCH_SIZE) + 1;
+      const chunk = selected.slice(i, i + SPOOFER_BATCH_SIZE);
+      const events = [];
+      for (const g of chunk) {
+        events.push(...buildGameScienceEvents(g, durationMs, ctx));
+      }
+
+      const headers = {
+        accept: '*/*',
+        'accept-language': 'en-GB',
+        authorization: session.token,
+        'content-type': 'application/json',
+        origin: 'https://discord.com',
+        referer: 'https://discord.com/channels/@me',
+        'user-agent': SPOOFER_USER_AGENT,
+        'x-debug-options': 'bugReporterEnabled',
+        'x-discord-locale': 'en-GB',
+        'x-discord-timezone': 'Asia/Ho_Chi_Minh',
+        'x-super-properties': superProps,
+      };
+      if (cookie.trim()) {
+        headers.cookie = cookie.trim();
+      }
+
+      const r = await fetch(`${API_BASE}/science`, {
+        method: 'POST',
+        headers,
+        body: JSON.stringify({ token: analyticsToken, events }),
+        signal: ac.signal,
+      });
+
+      if (r.status === 204 || r.ok) {
+        sentOk += chunk.length;
+        const pct = Math.round((sentOk / selected.length) * 100);
+        emitEvent(session, 'spoofer_progress', {
+          sentGames: sentOk,
+          totalGames: selected.length,
+          claimedHours: sentOk * hours,
+          pct,
+        });
+        pushSpoofLog(session, 'ok', `Batch ${batchNo}/${totalBatches} — ${sentOk}/${selected.length} game (HTTP ${r.status})`);
+      } else if (r.status === 401 || r.status === 403) {
+        pushSpoofLog(
+          session,
+          'error',
+          `Batch ${batchNo} bị từ chối (HTTP ${r.status}). Cần cập nhật cookie cf_clearance hợp lệ.`
+        );
+        break;
+      } else {
+        pushSpoofLog(session, 'warn', `Batch ${batchNo} trả về HTTP ${r.status}`);
+      }
+
+      if (i + SPOOFER_BATCH_SIZE < selected.length) {
+        await sleep(SPOOFER_BATCH_DELAY_MS, ac.signal);
+      }
+    }
+
+    if (!ac.signal.aborted && sentOk > 0) {
+      pushSpoofLog(
+        session,
+        'ok',
+        `Hoàn tất spoof: ${sentOk}/${selected.length} game (${(sentOk * hours).toLocaleString('vi-VN')}h).`
+      );
+    }
+  } catch (err) {
+    if (err.message !== 'ABORTED') {
+      pushSpoofLog(session, 'error', `Lỗi Spoofer: ${err.message}`);
+    }
+  } finally {
+    session.spooferRunning = false;
+    session.spooferAbort = null;
+    emitEvent(session, 'spoofer_state', { running: false });
   }
 }
 
@@ -695,7 +1003,8 @@ app.post('/api/auth/verify', async (req, res) => {
       },
       running: false,
       abortController: null,
-      speedMode: 'turbo',
+      spooferRunning: false,
+      spooferAbort: null,
       sseClients: new Set(),
       lastSeen: Date.now(),
     });
@@ -710,10 +1019,19 @@ app.post('/api/auth/verify', async (req, res) => {
   }
 });
 
+app.get('/api/auth/me', requireSession, (req, res) => {
+  res.json({
+    sessionId: req.sessionId,
+    buildNumber: req.session.buildNumber,
+    user: req.session.user,
+    running: req.session.running,
+    spooferRunning: req.session.spooferRunning,
+  });
+});
+
 app.post('/api/auth/logout', requireSession, (req, res) => {
-  if (req.session.abortController) {
-    req.session.abortController.abort();
-  }
+  if (req.session.abortController) req.session.abortController.abort();
+  if (req.session.spooferAbort) req.session.spooferAbort.abort();
   for (const client of req.session.sseClients) {
     try {
       client.end();
@@ -742,7 +1060,6 @@ app.get('/api/quests', requireSession, async (req, res) => {
     res.json({
       quests: normalized,
       running: req.session.running,
-      speedMode: req.session.speedMode,
     });
   } catch (err) {
     res.status(502).json({ error: err.message });
@@ -773,8 +1090,8 @@ app.post('/api/quests/start', requireSession, (req, res) => {
   if (req.session.running) {
     return res.status(409).json({ error: 'Engine đang chạy.' });
   }
-  const { speedMode = 'turbo', autoAccept = true, questIds = null } = req.body || {};
-  startRunner(req.session, { speedMode, autoAccept, questIds });
+  const { questIds = null } = req.body || {};
+  startRunner(req.session, { questIds });
   res.json({ ok: true, running: true });
 });
 
@@ -786,6 +1103,32 @@ app.post('/api/quests/stop', requireSession, (req, res) => {
   res.json({ ok: true, running: false });
 });
 
+app.get('/api/spoofer/games', requireSession, async (req, res) => {
+  try {
+    const games = await loadDetectableGames();
+    res.json({ total: games.length });
+  } catch (err) {
+    res.status(502).json({ error: err.message });
+  }
+});
+
+app.post('/api/spoofer/start', requireSession, (req, res) => {
+  if (req.session.spooferRunning) {
+    return res.status(409).json({ error: 'Badge Spoofer đang chạy.' });
+  }
+  const { gameCount = 50, hoursPerGame = 1, cookie = '', fingerprint = '' } = req.body || {};
+  startBadgeSpoofer(req.session, { gameCount, hoursPerGame, cookie, fingerprint });
+  res.json({ ok: true, running: true });
+});
+
+app.post('/api/spoofer/stop', requireSession, (req, res) => {
+  if (req.session.spooferAbort) {
+    req.session.spooferAbort.abort();
+    pushSpoofLog(req.session, 'warn', 'Đã dừng Badge Spoofer.');
+  }
+  res.json({ ok: true, running: false });
+});
+
 app.get('/api/events', requireSession, (req, res) => {
   res.setHeader('Content-Type', 'text/event-stream');
   res.setHeader('Cache-Control', 'no-cache');
@@ -793,7 +1136,8 @@ app.get('/api/events', requireSession, (req, res) => {
   res.flushHeaders?.();
 
   req.session.sseClients.add(res);
-  res.write(`event: runner_state\ndata: ${JSON.stringify({ running: req.session.running, speedMode: req.session.speedMode })}\n\n`);
+  res.write(`event: runner_state\ndata: ${JSON.stringify({ running: req.session.running })}\n\n`);
+  res.write(`event: spoofer_state\ndata: ${JSON.stringify({ running: req.session.spooferRunning })}\n\n`);
 
   const keepAlive = setInterval(() => {
     try {
@@ -809,12 +1153,12 @@ app.get('/api/events', requireSession, (req, res) => {
   });
 });
 
-// Cleanup stale sessions every 30 minutes
 setInterval(() => {
   const cutoff = Date.now() - 6 * 60 * 60 * 1000;
   for (const [sid, session] of sessions.entries()) {
     if (session.lastSeen < cutoff) {
       if (session.abortController) session.abortController.abort();
+      if (session.spooferAbort) session.spooferAbort.abort();
       sessions.delete(sid);
     }
   }
@@ -822,7 +1166,7 @@ setInterval(() => {
 
 if (require.main === module) {
   app.listen(PORT, () => {
-    console.log(`Discord Quest Runner server listening on http://localhost:${PORT}`);
+    console.log(`Vinhxhub v0.01 server listening on http://localhost:${PORT}`);
   });
 }
 
