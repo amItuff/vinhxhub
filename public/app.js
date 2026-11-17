@@ -2,13 +2,20 @@
   const SESSION_KEY = 'vinhxhub_session_id';
   const LANG_KEY = 'vinhxhub_lang';
 
+  const VIEW_PATHS = {
+    runner: '/questrunner',
+    spoofer: '/badgespoofer',
+    donate: '/donate',
+    faq: '/faq',
+  };
+
   const I18N = {
     vi: {
       'nav.aria': 'Điều hướng chính',
       'nav.runner': 'Quest Runner',
       'nav.spoofer': 'Badge Spoofer',
       'nav.donate': 'Donate',
-      'banner.edition': 'PHIÊN BẢN TẠM THỜI · KHÔNG LƯU TOKEN',
+      'nav.faq': 'FAQ',
       'auth.logout': 'Thoát',
       'auth.logoutTitle': 'Đăng xuất',
       'auth.ephemeralChip': 'Token chỉ dùng tạm thời, không lưu lại',
@@ -27,12 +34,12 @@
       'confirm.subtitle': 'Kiểm tra ảnh đại diện và UID trước khi vào bảng điều khiển.',
       'confirm.cancel': 'Đổi token khác',
       'confirm.enter': 'Xác nhận & Vào ngay',
-      'changelog.releaseTag': 'NHẬT KÝ PHÁT HÀNH',
-      'changelog.changes': 'Thay đổi',
-      'changelog.item1': 'Chạy song song mặc định toàn bộ Quest (Video, Play, Stream, Activity) và tự động nhận Quest mới.',
-      'changelog.item2': 'Xác nhận tài khoản qua ảnh đại diện + UID trước khi vào, giữ phiên khi tải lại trang (F5) cho tới khi bấm Thoát.',
-      'changelog.item3': 'Tích hợp Discord Badge Spoofer (/api/v9/science) tùy chỉnh số game và số giờ chơi.',
-      'changelog.item4': 'Trang Donate VietQR ACB tự động cập nhật nội dung và số tiền chuyển khoản.',
+      'changelog.releaseTag': 'CHỨC NĂNG CHÍNH',
+      'changelog.changes': 'Tính năng',
+      'changelog.item1': 'Auto Quest Runner: tự nhận và chạy song song toàn bộ Quest (Video, Play, Stream, Activity) theo thời gian thực.',
+      'changelog.item2': 'Badge Spoofer: gửi sự kiện Game Time & Game Variety qua /api/v9/science với số game và số giờ tùy chỉnh.',
+      'changelog.item3': 'Xác thực an toàn: đối chiếu ảnh đại diện + UID trước khi vào, phiên chỉ lưu tạm trong RAM server.',
+      'changelog.item4': 'Hỗ trợ song ngữ VI/EN, VietQR Donate và trang FAQ minh bạch cơ chế bảo mật.',
       'dash.title': 'Bảng điều khiển Quest',
       'dash.subtitle': 'Tự động nhận quest mới và chạy song song ở tốc độ an toàn tối đa.',
       'dash.refresh': 'Làm mới',
@@ -73,6 +80,20 @@
       'donate.amountLabel': 'Chọn nhanh số tiền (tùy chọn)',
       'donate.customAmount': 'Tùy nhập',
       'donate.qrCaption': 'Quét bằng ứng dụng ngân hàng hoặc ví điện tử hỗ trợ VietQR',
+      'faq.title': 'Câu hỏi & Bằng chứng An toàn',
+      'faq.subtitle': 'Tất cả cơ chế xử lý token, lưu trữ phiên và giới hạn tốc độ đều minh bạch dựa trên mã nguồn thực tế.',
+      'faq.q1': 'Token có bị lưu vào ổ đĩa hay cơ sở dữ liệu không?',
+      'faq.a1': 'Không. Backend lưu phiên làm việc bằng cấu trúc Map tạm thời trong RAM (const sessions = new Map()). Không có file log, database hay dịch vụ bên thứ ba nào nhận hoặc lưu trữ token của bạn.',
+      'faq.q2': 'Trình duyệt lưu gì khi giữ phiên sau khi F5?',
+      'faq.a2': 'Trình duyệt chỉ lưu duy nhất mã phiên ngẫu nhiên UUID (vinhxhub_session_id) trong localStorage. Discord Token gốc không bao giờ được lưu trong localStorage, cookie hay DOM.',
+      'faq.q3': 'Khi bấm Thoát hoặc không dùng nữa thì sao?',
+      'faq.a3': 'Khi bấm Thoát (/api/auth/logout), server lập tức hủy mọi tác vụ đang chạy qua AbortController, đóng luồng SSE và xóa sạch phiên khỏi RAM. Ngoài ra, phiên không hoạt động tự động bị xóa sau 6 giờ.',
+      'faq.q4': 'Cơ chế chống Rate Limit và bảo vệ tài khoản?',
+      'faq.a4': 'Quest Runner dùng cấu hình Parallel Safe Turbo: tự đọc retry_after khi gặp HTTP 429, thêm độ trễ ngẫu nhiên (jitter ±1.5s) cho mỗi heartbeat 16.5s và cho phép dừng khẩn cấp bất cứ lúc nào.',
+      'faq.q5': 'Web kết nối tới những máy chủ nào?',
+      'faq.a5': 'Chỉ gọi trực tiếp API chính thức của Discord (discord.com/api/v9), danh sách game công khai từ Discord CDN (cdn.discordapp.com/detectables/games.json) và thông số client windows từ cordapi.dolfi.es (có fallback tĩnh).',
+      'faq.q6': 'Các lớp bảo vệ HTTP trên server là gì?',
+      'faq.a6': 'Express bật sẵn header chống nhúng iframe (X-Frame-Options: DENY), chống đoán MIME (X-Content-Type-Options: nosniff), giới hạn Referrer-Policy và giới hạn payload JSON tối đa 128KB.',
       'common.clearLog': 'Xóa log',
       'common.copy': 'Sao chép',
       'common.copied': 'Đã chép',
@@ -82,7 +103,7 @@
       'nav.runner': 'Quest Runner',
       'nav.spoofer': 'Badge Spoofer',
       'nav.donate': 'Donate',
-      'banner.edition': 'EPHEMERAL SESSION · ZERO TOKEN STORAGE',
+      'nav.faq': 'FAQ',
       'auth.logout': 'Log out',
       'auth.logoutTitle': 'Log out',
       'auth.ephemeralChip': 'Token stays in memory only, never saved',
@@ -101,12 +122,12 @@
       'confirm.subtitle': 'Check your avatar and UID before entering the dashboard.',
       'confirm.cancel': 'Use another token',
       'confirm.enter': 'Confirm & Enter',
-      'changelog.releaseTag': 'RELEASE NOTES',
-      'changelog.changes': 'Changes',
-      'changelog.item1': 'Parallel execution by default across all Quests (Video, Play, Stream, Activity) with automatic enrollment.',
-      'changelog.item2': 'Account confirmation via avatar + UID before entry, keeping session across reloads (F5) until explicit logout.',
-      'changelog.item3': 'Integrated Discord Badge Spoofer (/api/v9/science) with configurable game count and playtime hours.',
-      'changelog.item4': 'VietQR ACB Donate page that dynamically updates transfer memo and preset amount.',
+      'changelog.releaseTag': 'CORE FEATURES',
+      'changelog.changes': 'Features',
+      'changelog.item1': 'Auto Quest Runner: auto-enrolls and executes all Quests (Video, Play, Stream, Activity) in parallel with live telemetry.',
+      'changelog.item2': 'Badge Spoofer: dispatches Game Time & Game Variety events to /api/v9/science with custom game count and hours.',
+      'changelog.item3': 'Safe Verification: confirms Avatar + UID before entry; sessions remain strictly ephemeral in server RAM.',
+      'changelog.item4': 'Bilingual VI/EN interface, dynamic VietQR Donate, and a transparent Security FAQ.',
       'dash.title': 'Quest Dashboard',
       'dash.subtitle': 'Automatically enroll new quests and execute them in parallel at maximum safe speed.',
       'dash.refresh': 'Refresh',
@@ -147,6 +168,20 @@
       'donate.amountLabel': 'Quick Amount (optional)',
       'donate.customAmount': 'Custom',
       'donate.qrCaption': 'Scan with any banking app or e-wallet supporting VietQR',
+      'faq.title': 'FAQ & Safety Evidence',
+      'faq.subtitle': 'Every token-handling rule, session lifecycle, and rate-limit safeguard is verifiable directly from the source code.',
+      'faq.q1': 'Is my Discord token ever saved to disk or a database?',
+      'faq.a1': 'No. The backend stores active sessions solely in an in-memory JavaScript Map (const sessions = new Map()). No log files, databases, or third-party trackers receive or store your token.',
+      'faq.q2': 'What does the browser store to keep my session on reload?',
+      'faq.a2': 'Only a random UUID session identifier (vinhxhub_session_id) is saved in localStorage. Your actual Discord token never enters localStorage, cookies, or the DOM.',
+      'faq.q3': 'What happens when I log out or leave the site?',
+      'faq.a3': 'Clicking Log out (/api/auth/logout) immediately aborts all running tasks via AbortController, closes SSE streams, and deletes the session from server RAM. Idle sessions also auto-expire after 6 hours.',
+      'faq.q4': 'How does it prevent rate limits and protect my account?',
+      'faq.a4': 'Quest Runner uses the Parallel Safe Turbo profile: it automatically obeys Discord HTTP 429 retry_after headers, adds randomized jitter (±1.5s) to 16.5s heartbeats, and supports instant abort at any time.',
+      'faq.q5': 'Which external servers does the app contact?',
+      'faq.a5': 'Only the official Discord API (discord.com/api/v9), the public Discord detectable games CDN (cdn.discordapp.com/detectables/games.json), and cordapi.dolfi.es for Windows client properties (with static fallback).',
+      'faq.q6': 'What HTTP security headers are enforced?',
+      'faq.a6': 'Express enforces X-Frame-Options: DENY (anti-clickjacking), X-Content-Type-Options: nosniff, strict-origin-when-cross-origin Referrer-Policy, and a 128KB JSON payload limit.',
       'common.clearLog': 'Clear log',
       'common.copy': 'Copy',
       'common.copied': 'Copied',
@@ -170,9 +205,11 @@
     viewDashboard: document.getElementById('view-dashboard'),
     viewSpoofer: document.getElementById('view-spoofer'),
     viewDonate: document.getElementById('view-donate'),
+    viewFaq: document.getElementById('view-faq'),
     navRunner: document.getElementById('nav-runner'),
     navSpoofer: document.getElementById('nav-spoofer'),
     navDonate: document.getElementById('nav-donate'),
+    navFaq: document.getElementById('nav-faq'),
     btnLang: document.getElementById('btn-lang'),
     langLabel: document.getElementById('lang-label'),
     userPill: document.getElementById('user-pill'),
@@ -188,6 +225,7 @@
     btnCancelConfirm: document.getElementById('btn-cancel-confirm'),
     btnConfirmEnter: document.getElementById('btn-confirm-enter'),
     authForm: document.getElementById('auth-form'),
+    tokenInputWrap: document.getElementById('token-input-wrap'),
     tokenInput: document.getElementById('token-input'),
     btnToggleToken: document.getElementById('btn-toggle-token'),
     btnConnect: document.getElementById('btn-connect'),
@@ -223,6 +261,15 @@
     toastRegion: document.getElementById('toast-region'),
   };
 
+  function resolveViewFromPath(pathname) {
+    const clean = (pathname || '/').toLowerCase().replace(/\/+$/, '') || '/';
+    if (clean === '/badgespoofer') return 'spoofer';
+    if (clean === '/donate') return 'donate';
+    if (clean === '/faq') return 'faq';
+    if (clean === '/questrunner' || clean === '/badgespoofer/questrunner' || clean === '/') return 'runner';
+    return 'runner';
+  }
+
   function t(key, vars = {}) {
     const dict = I18N[state.lang] || I18N.vi;
     let str = dict[key] ?? I18N.vi[key] ?? key;
@@ -248,6 +295,10 @@
     document.querySelectorAll('[data-i18n-title]').forEach((el) => {
       el.title = t(el.dataset.i18nTitle);
     });
+
+    if (!els.authError.hidden && !els.tokenInput.value.trim()) {
+      els.authError.textContent = t('auth.emptyTokenError');
+    }
 
     updateSpoofEstimate();
     if (state.sessionId) {
@@ -282,7 +333,7 @@
       if (id) localStorage.setItem(SESSION_KEY, id);
       else localStorage.removeItem(SESSION_KEY);
     } catch {
-      // ignore storage errors
+      // ignore
     }
   }
 
@@ -302,14 +353,43 @@
     setTimeout(() => toast.remove(), 2600);
   }
 
-  function switchView(view) {
+  function triggerAuthError(message) {
+    els.authError.textContent = message;
+    els.authError.hidden = false;
+    els.authError.style.animation = 'none';
+    void els.authError.offsetWidth;
+    els.authError.style.animation = '';
+
+    els.tokenInputWrap.classList.add('is-invalid');
+    els.tokenInputWrap.classList.remove('is-shaking');
+    void els.tokenInputWrap.offsetWidth;
+    els.tokenInputWrap.classList.add('is-shaking');
+  }
+
+  function clearAuthError() {
+    els.authError.hidden = true;
+    els.tokenInputWrap.classList.remove('is-invalid', 'is-shaking');
+  }
+
+  function switchView(view, updateUrl = true) {
     state.activeView = view;
     els.navRunner.classList.toggle('is-active', view === 'runner');
     els.navSpoofer.classList.toggle('is-active', view === 'spoofer');
     els.navDonate.classList.toggle('is-active', view === 'donate');
+    els.navFaq.classList.toggle('is-active', view === 'faq');
 
+    if (updateUrl) {
+      const targetPath = VIEW_PATHS[view] || '/questrunner';
+      if (window.location.pathname !== targetPath) {
+        window.history.pushState({ view }, '', targetPath);
+      }
+    }
+
+    const isPublic = view === 'donate' || view === 'faq';
     els.viewDonate.hidden = view !== 'donate';
-    if (view === 'donate') {
+    els.viewFaq.hidden = view !== 'faq';
+
+    if (isPublic) {
       els.viewAuth.hidden = true;
       els.viewDashboard.hidden = true;
       els.viewSpoofer.hidden = true;
@@ -599,7 +679,7 @@
     connectEvents();
     loadQuests();
     loadSpooferGames();
-    switchView(state.activeView === 'donate' ? 'donate' : 'runner');
+    switchView(state.activeView, false);
   }
 
   async function restoreSessionOnLoad() {
@@ -632,6 +712,17 @@
   els.navRunner.addEventListener('click', () => switchView('runner'));
   els.navSpoofer.addEventListener('click', () => switchView('spoofer'));
   els.navDonate.addEventListener('click', () => switchView('donate'));
+  els.navFaq.addEventListener('click', () => switchView('faq'));
+
+  window.addEventListener('popstate', () => {
+    switchView(resolveViewFromPath(window.location.pathname), false);
+  });
+
+  els.tokenInput.addEventListener('input', () => {
+    if (els.tokenInput.value.trim()) {
+      clearAuthError();
+    }
+  });
 
   els.btnToggleToken.addEventListener('click', () => {
     const isPwd = els.tokenInput.type === 'password';
@@ -641,11 +732,11 @@
   els.authForm.addEventListener('submit', async (e) => {
     e.preventDefault();
     const token = els.tokenInput.value.trim();
-    els.authError.hidden = true;
+    clearAuthError();
 
     if (!token) {
-      els.authError.textContent = t('auth.emptyTokenError');
-      els.authError.hidden = false;
+      triggerAuthError(t('auth.emptyTokenError'));
+      els.tokenInput.focus();
       return;
     }
 
@@ -675,8 +766,7 @@
       els.authStepInput.hidden = true;
       els.authStepConfirm.hidden = false;
     } catch (err) {
-      els.authError.textContent = err.message;
-      els.authError.hidden = false;
+      triggerAuthError(err.message);
     } finally {
       els.btnConnect.disabled = false;
       spinner.hidden = true;
@@ -812,5 +902,7 @@
   });
 
   loadInitialLanguage();
+  const initialView = resolveViewFromPath(window.location.pathname);
+  switchView(initialView, false);
   restoreSessionOnLoad();
 })();
