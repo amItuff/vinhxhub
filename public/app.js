@@ -1,7 +1,160 @@
 (() => {
   const SESSION_KEY = 'vinhxhub_session_id';
+  const LANG_KEY = 'vinhxhub_lang';
+
+  const I18N = {
+    vi: {
+      'nav.aria': 'Điều hướng chính',
+      'nav.runner': 'Quest Runner',
+      'nav.spoofer': 'Badge Spoofer',
+      'nav.donate': 'Donate',
+      'banner.edition': 'PHIÊN BẢN TẠM THỜI · KHÔNG LƯU TOKEN',
+      'auth.logout': 'Thoát',
+      'auth.logoutTitle': 'Đăng xuất',
+      'auth.ephemeralChip': 'Token chỉ dùng tạm thời, không lưu lại',
+      'auth.title': 'Xác thực Token.',
+      'auth.subtitle': 'Nhập Discord User Token để kiểm tra tài khoản, tự động nhận và chạy song song toàn bộ Quest.',
+      'auth.tokenLabel': 'Discord Token',
+      'auth.tokenPlaceholder': 'Dán Discord Token tại đây…',
+      'auth.toggleTokenAria': 'Hiện hoặc ẩn token',
+      'auth.verifyBtn': 'Kiểm tra Token',
+      'auth.verifyingBtn': 'Đang kiểm tra…',
+      'auth.emptyTokenError': 'Vui lòng nhập Discord Token.',
+      'auth.requireAuthToast': 'Vui lòng xác thực Discord Token trước.',
+      'auth.loggedOutToast': 'Đã đăng xuất.',
+      'confirm.chip': 'Xác nhận tài khoản Discord',
+      'confirm.title': 'Đây có phải tài khoản của bạn?',
+      'confirm.subtitle': 'Kiểm tra ảnh đại diện và UID trước khi vào bảng điều khiển.',
+      'confirm.cancel': 'Đổi token khác',
+      'confirm.enter': 'Xác nhận & Vào ngay',
+      'changelog.releaseTag': 'NHẬT KÝ PHÁT HÀNH',
+      'changelog.changes': 'Thay đổi',
+      'changelog.item1': 'Chạy song song mặc định toàn bộ Quest (Video, Play, Stream, Activity) và tự động nhận Quest mới.',
+      'changelog.item2': 'Xác nhận tài khoản qua ảnh đại diện + UID trước khi vào, giữ phiên khi tải lại trang (F5) cho tới khi bấm Thoát.',
+      'changelog.item3': 'Tích hợp Discord Badge Spoofer (/api/v9/science) tùy chỉnh số game và số giờ chơi.',
+      'changelog.item4': 'Trang Donate VietQR ACB tự động cập nhật nội dung và số tiền chuyển khoản.',
+      'dash.title': 'Bảng điều khiển Quest',
+      'dash.subtitle': 'Tự động nhận quest mới và chạy song song ở tốc độ an toàn tối đa.',
+      'dash.refresh': 'Làm mới',
+      'dash.startAll': 'Chạy tất cả',
+      'dash.stop': 'Dừng lại',
+      'dash.statTotal': 'Tổng Quest',
+      'dash.statActive': 'Đang chạy song song',
+      'dash.statCompleted': 'Đã hoàn thành',
+      'dash.questListTitle': 'Danh sách nhiệm vụ',
+      'dash.availableCount': '{n} khả dụng',
+      'dash.emptyQuests': 'Tài khoản hiện không có Discord Quest khả dụng.',
+      'dash.statusDone': 'Hoàn thành',
+      'dash.statusEnrolled': 'Đang nhận',
+      'dash.statusUnenrolled': 'Chưa nhận',
+      'dash.statusUnsupported': 'Không hỗ trợ',
+      'dash.enrollBtn': 'Nhận Quest',
+      'dash.runOneBtn': 'Chạy riêng',
+      'dash.enrolledToast': 'Đã nhận: {name}',
+      'dash.logReady': 'Sẵn sàng. Nhấn "Chạy tất cả" để bắt đầu.',
+      'spoofer.subtitle': 'Gửi sự kiện launch_game và running_game_heartbeat tới /api/v9/science theo số game và thời gian tùy chỉnh.',
+      'spoofer.gameCountLabel': 'Số lượng game',
+      'spoofer.availableSuffix': 'khả dụng',
+      'spoofer.hoursLabel': 'Thời gian mỗi game (giờ)',
+      'spoofer.totalEstimate': 'Tổng thời gian ước tính:',
+      'spoofer.hoursUnit': 'giờ',
+      'spoofer.cookieLabel': 'Cookie cf_clearance (tùy chọn — dùng nếu Discord trả về 403)',
+      'spoofer.fpLabel': 'Executable Fingerprint (tùy chọn)',
+      'spoofer.startBtn': 'Bắt đầu Spoof',
+      'spoofer.stopBtn': 'Dừng Spoof',
+      'spoofer.logReady': 'Nhập số game và số giờ rồi bấm "Bắt đầu Spoof".',
+      'donate.title': 'Ủng hộ phát triển',
+      'donate.subtitle': 'Nếu công cụ giúp bạn tiết kiệm thời gian làm Discord Quest, bạn có thể ủng hộ tác giả qua chuyển khoản ngân hàng ACB bên dưới.',
+      'donate.bankLabel': 'Ngân hàng',
+      'donate.bankName': 'ACB — Ngân hàng TMCP Á Châu',
+      'donate.ownerLabel': 'Chủ tài khoản',
+      'donate.accLabel': 'Số tài khoản',
+      'donate.memoLabel': 'Nội dung chuyển khoản',
+      'donate.amountLabel': 'Chọn nhanh số tiền (tùy chọn)',
+      'donate.customAmount': 'Tùy nhập',
+      'donate.qrCaption': 'Quét bằng ứng dụng ngân hàng hoặc ví điện tử hỗ trợ VietQR',
+      'common.clearLog': 'Xóa log',
+      'common.copy': 'Sao chép',
+      'common.copied': 'Đã chép',
+    },
+    en: {
+      'nav.aria': 'Primary navigation',
+      'nav.runner': 'Quest Runner',
+      'nav.spoofer': 'Badge Spoofer',
+      'nav.donate': 'Donate',
+      'banner.edition': 'EPHEMERAL SESSION · ZERO TOKEN STORAGE',
+      'auth.logout': 'Log out',
+      'auth.logoutTitle': 'Log out',
+      'auth.ephemeralChip': 'Token stays in memory only, never saved',
+      'auth.title': 'Verify Token.',
+      'auth.subtitle': 'Enter your Discord User Token to inspect your account, auto-enroll, and run all Quests in parallel.',
+      'auth.tokenLabel': 'Discord Token',
+      'auth.tokenPlaceholder': 'Paste Discord Token here…',
+      'auth.toggleTokenAria': 'Show or hide token',
+      'auth.verifyBtn': 'Verify Token',
+      'auth.verifyingBtn': 'Verifying…',
+      'auth.emptyTokenError': 'Please enter a Discord Token.',
+      'auth.requireAuthToast': 'Please verify your Discord Token first.',
+      'auth.loggedOutToast': 'Logged out.',
+      'confirm.chip': 'Confirm Discord account',
+      'confirm.title': 'Is this your account?',
+      'confirm.subtitle': 'Check your avatar and UID before entering the dashboard.',
+      'confirm.cancel': 'Use another token',
+      'confirm.enter': 'Confirm & Enter',
+      'changelog.releaseTag': 'RELEASE NOTES',
+      'changelog.changes': 'Changes',
+      'changelog.item1': 'Parallel execution by default across all Quests (Video, Play, Stream, Activity) with automatic enrollment.',
+      'changelog.item2': 'Account confirmation via avatar + UID before entry, keeping session across reloads (F5) until explicit logout.',
+      'changelog.item3': 'Integrated Discord Badge Spoofer (/api/v9/science) with configurable game count and playtime hours.',
+      'changelog.item4': 'VietQR ACB Donate page that dynamically updates transfer memo and preset amount.',
+      'dash.title': 'Quest Dashboard',
+      'dash.subtitle': 'Automatically enroll new quests and execute them in parallel at maximum safe speed.',
+      'dash.refresh': 'Refresh',
+      'dash.startAll': 'Run All',
+      'dash.stop': 'Stop',
+      'dash.statTotal': 'Total Quests',
+      'dash.statActive': 'Running Parallel',
+      'dash.statCompleted': 'Completed',
+      'dash.questListTitle': 'Quest Queue',
+      'dash.availableCount': '{n} available',
+      'dash.emptyQuests': 'No Discord Quests are currently available on this account.',
+      'dash.statusDone': 'Completed',
+      'dash.statusEnrolled': 'Enrolled',
+      'dash.statusUnenrolled': 'Not enrolled',
+      'dash.statusUnsupported': 'Unsupported',
+      'dash.enrollBtn': 'Enroll',
+      'dash.runOneBtn': 'Run Solo',
+      'dash.enrolledToast': 'Enrolled: {name}',
+      'dash.logReady': 'Ready. Click "Run All" to begin.',
+      'spoofer.subtitle': 'Dispatches launch_game and running_game_heartbeat events to /api/v9/science with custom game count and hours.',
+      'spoofer.gameCountLabel': 'Game count',
+      'spoofer.availableSuffix': 'available',
+      'spoofer.hoursLabel': 'Hours per game',
+      'spoofer.totalEstimate': 'Estimated total playtime:',
+      'spoofer.hoursUnit': 'hrs',
+      'spoofer.cookieLabel': 'cf_clearance cookie (optional — use if Discord returns 403)',
+      'spoofer.fpLabel': 'Executable Fingerprint (optional)',
+      'spoofer.startBtn': 'Start Spoofer',
+      'spoofer.stopBtn': 'Stop Spoofer',
+      'spoofer.logReady': 'Set game count and hours, then click "Start Spoofer".',
+      'donate.title': 'Support Development',
+      'donate.subtitle': 'If this tool saves you time on Discord Quests, you can support the author via ACB bank transfer below.',
+      'donate.bankLabel': 'Bank',
+      'donate.bankName': 'ACB — Asia Commercial Joint Stock Bank',
+      'donate.ownerLabel': 'Account Holder',
+      'donate.accLabel': 'Account Number',
+      'donate.memoLabel': 'Transfer Memo',
+      'donate.amountLabel': 'Quick Amount (optional)',
+      'donate.customAmount': 'Custom',
+      'donate.qrCaption': 'Scan with any banking app or e-wallet supporting VietQR',
+      'common.clearLog': 'Clear log',
+      'common.copy': 'Copy',
+      'common.copied': 'Copied',
+    },
+  };
 
   const state = {
+    lang: 'vi',
     sessionId: null,
     pendingAuth: null,
     user: null,
@@ -20,6 +173,8 @@
     navRunner: document.getElementById('nav-runner'),
     navSpoofer: document.getElementById('nav-spoofer'),
     navDonate: document.getElementById('nav-donate'),
+    btnLang: document.getElementById('btn-lang'),
+    langLabel: document.getElementById('lang-label'),
     userPill: document.getElementById('user-pill'),
     userAvatarBox: document.getElementById('user-avatar-box'),
     userDisplayName: document.getElementById('user-display-name'),
@@ -68,6 +223,60 @@
     toastRegion: document.getElementById('toast-region'),
   };
 
+  function t(key, vars = {}) {
+    const dict = I18N[state.lang] || I18N.vi;
+    let str = dict[key] ?? I18N.vi[key] ?? key;
+    for (const [k, v] of Object.entries(vars)) {
+      str = str.replaceAll(`{${k}}`, String(v));
+    }
+    return str;
+  }
+
+  function applyTranslations() {
+    document.documentElement.lang = state.lang;
+    els.langLabel.textContent = state.lang === 'vi' ? 'VI / EN' : 'EN / VI';
+
+    document.querySelectorAll('[data-i18n]').forEach((el) => {
+      el.textContent = t(el.dataset.i18n);
+    });
+    document.querySelectorAll('[data-i18n-placeholder]').forEach((el) => {
+      el.placeholder = t(el.dataset.i18nPlaceholder);
+    });
+    document.querySelectorAll('[data-i18n-aria]').forEach((el) => {
+      el.setAttribute('aria-label', t(el.dataset.i18nAria));
+    });
+    document.querySelectorAll('[data-i18n-title]').forEach((el) => {
+      el.title = t(el.dataset.i18nTitle);
+    });
+
+    updateSpoofEstimate();
+    if (state.sessionId) {
+      renderQuests();
+    }
+  }
+
+  function setLanguage(lang) {
+    state.lang = lang === 'en' ? 'en' : 'vi';
+    try {
+      localStorage.setItem(LANG_KEY, state.lang);
+    } catch {
+      // ignore
+    }
+    applyTranslations();
+  }
+
+  function loadInitialLanguage() {
+    try {
+      const saved = localStorage.getItem(LANG_KEY);
+      if (saved === 'en' || saved === 'vi') {
+        state.lang = saved;
+      }
+    } catch {
+      // ignore
+    }
+    applyTranslations();
+  }
+
   function saveSessionId(id) {
     try {
       if (id) localStorage.setItem(SESSION_KEY, id);
@@ -86,11 +295,11 @@
   }
 
   function showToast(msg) {
-    const t = document.createElement('div');
-    t.className = 'toast';
-    t.textContent = msg;
-    els.toastRegion.appendChild(t);
-    setTimeout(() => t.remove(), 2600);
+    const toast = document.createElement('div');
+    toast.className = 'toast';
+    toast.textContent = msg;
+    els.toastRegion.appendChild(toast);
+    setTimeout(() => toast.remove(), 2600);
   }
 
   function switchView(view) {
@@ -113,7 +322,7 @@
       els.viewDashboard.hidden = true;
       els.viewSpoofer.hidden = true;
       if (view === 'spoofer') {
-        showToast('Vui lòng xác thực Discord Token trước.');
+        showToast(t('auth.requireAuthToast'));
       }
       return;
     }
@@ -129,7 +338,7 @@
 
     const ts = document.createElement('span');
     ts.className = 'log-ts';
-    ts.textContent = entry.ts || new Date().toLocaleTimeString('vi-VN', { hour12: false });
+    ts.textContent = entry.ts || new Date().toLocaleTimeString(state.lang === 'en' ? 'en-GB' : 'vi-VN', { hour12: false });
 
     const msg = document.createElement('span');
     msg.className = 'log-msg';
@@ -161,7 +370,8 @@
     if (sec < 60) return `${sec}s`;
     const m = Math.floor(sec / 60);
     const s = sec % 60;
-    return s > 0 ? `${m}p ${s}s` : `${m}p`;
+    const minUnit = state.lang === 'en' ? 'm' : 'p';
+    return s > 0 ? `${m}${minUnit} ${s}s` : `${m}${minUnit}`;
   }
 
   function renderQuests() {
@@ -173,14 +383,14 @@
     els.statTotal.textContent = String(quests.length);
     els.statActive.textContent = String(active);
     els.statCompleted.textContent = String(completed);
-    els.questFilterCount.textContent = `${completable} khả dụng`;
+    els.questFilterCount.textContent = t('dash.availableCount', { n: completable });
 
     els.questsList.innerHTML = '';
 
     if (quests.length === 0) {
       const empty = document.createElement('div');
-      empty.className = 'surface-card quest-card';
-      empty.innerHTML = '<p class="muted">Tài khoản hiện không có Discord Quest khả dụng.</p>';
+      empty.className = 'editorial-block quest-card';
+      empty.innerHTML = `<p class="muted">${t('dash.emptyQuests')}</p>`;
       els.questsList.appendChild(empty);
       return;
     }
@@ -188,16 +398,16 @@
     for (const q of quests) {
       const isRunningCard = state.running && q.enrolled && !q.completed && q.completable;
       const card = document.createElement('article');
-      card.className = `surface-card quest-card ${isRunningCard ? 'is-running' : ''}`;
+      card.className = `editorial-block quest-card ${isRunningCard ? 'is-running' : ''}`;
       card.dataset.questId = q.id;
 
       const statusText = q.completed
-        ? 'Hoàn thành'
+        ? t('dash.statusDone')
         : q.enrolled
-        ? q.taskType || 'Đang nhận'
+        ? q.taskType || t('dash.statusEnrolled')
         : q.completable
-        ? 'Chưa nhận'
-        : 'Không hỗ trợ';
+        ? t('dash.statusUnenrolled')
+        : t('dash.statusUnsupported');
 
       const pct = q.completed ? 100 : q.progressPct;
       const doneVal = q.completed ? q.secondsNeeded : q.secondsDone;
@@ -230,14 +440,14 @@
           const btnEnroll = document.createElement('button');
           btnEnroll.type = 'button';
           btnEnroll.className = 'btn-ghost-sm';
-          btnEnroll.textContent = 'Nhận Quest';
+          btnEnroll.textContent = t('dash.enrollBtn');
           btnEnroll.addEventListener('click', () => enrollSingleQuest(q));
           actions.appendChild(btnEnroll);
         }
         const btnRunOne = document.createElement('button');
         btnRunOne.type = 'button';
         btnRunOne.className = 'btn-ghost-sm';
-        btnRunOne.textContent = 'Chạy riêng';
+        btnRunOne.textContent = t('dash.runOneBtn');
         btnRunOne.disabled = state.running;
         btnRunOne.addEventListener('click', () => startRunner([q.id]));
         actions.appendChild(btnRunOne);
@@ -292,7 +502,7 @@
           trafficMetadataSealed: q.trafficMetadataSealed,
         }),
       });
-      showToast(`Đã nhận: ${q.name}`);
+      showToast(t('dash.enrolledToast', { name: q.name }));
       await loadQuests();
     } catch (err) {
       showToast(err.message);
@@ -394,21 +604,30 @@
 
   async function restoreSessionOnLoad() {
     const savedId = loadSessionId();
-    if (!savedId) return;
+    if (!savedId) {
+      els.userPill.hidden = true;
+      return;
+    }
     try {
       const res = await fetch('/api/auth/me', {
         headers: { 'X-Session-Id': savedId },
       });
       if (!res.ok) {
         saveSessionId(null);
+        els.userPill.hidden = true;
         return;
       }
       const data = await res.json();
       applyAuthenticatedSession(data);
     } catch {
       saveSessionId(null);
+      els.userPill.hidden = true;
     }
   }
+
+  els.btnLang.addEventListener('click', () => {
+    setLanguage(state.lang === 'vi' ? 'en' : 'vi');
+  });
 
   els.navRunner.addEventListener('click', () => switchView('runner'));
   els.navSpoofer.addEventListener('click', () => switchView('spoofer'));
@@ -425,16 +644,18 @@
     els.authError.hidden = true;
 
     if (!token) {
-      els.authError.textContent = 'Vui lòng nhập Discord Token.';
+      els.authError.textContent = t('auth.emptyTokenError');
       els.authError.hidden = false;
       return;
     }
 
     const spinner = els.btnConnect.querySelector('.spinner');
     const label = els.btnConnect.querySelector('.btn-label');
+    const arrow = els.btnConnect.querySelector('.btn-arrow');
     els.btnConnect.disabled = true;
     spinner.hidden = false;
-    label.textContent = 'Đang kiểm tra…';
+    if (arrow) arrow.hidden = true;
+    label.textContent = t('auth.verifyingBtn');
 
     try {
       const res = await apiFetch('/api/auth/verify', {
@@ -459,7 +680,8 @@
     } finally {
       els.btnConnect.disabled = false;
       spinner.hidden = true;
-      label.textContent = 'Kiểm tra Token';
+      if (arrow) arrow.hidden = false;
+      label.textContent = t('auth.verifyBtn');
     }
   });
 
@@ -502,7 +724,7 @@
     setSpooferUI(false);
     els.userPill.hidden = true;
     switchView('runner');
-    showToast('Đã đăng xuất.');
+    showToast(t('auth.loggedOutToast'));
   });
 
   els.btnRefresh.addEventListener('click', loadQuests);
@@ -515,7 +737,8 @@
   function updateSpoofEstimate() {
     const count = Math.max(0, Number(els.spoofCount.value) || 0);
     const hours = Math.max(0, Number(els.spoofHours.value) || 0);
-    els.spoofTotalHours.textContent = `${(count * hours).toLocaleString('vi-VN')} giờ`;
+    const locale = state.lang === 'en' ? 'en-US' : 'vi-VN';
+    els.spoofTotalHours.textContent = `${(count * hours).toLocaleString(locale)} ${t('spoofer.hoursUnit')}`;
   }
   els.spoofCount.addEventListener('input', updateSpoofEstimate);
   els.spoofHours.addEventListener('input', updateSpoofEstimate);
@@ -566,10 +789,9 @@
         document.execCommand('copy');
         ta.remove();
       }
-      const prev = btn.textContent;
-      btn.textContent = 'Đã chép';
+      btn.textContent = t('common.copied');
       setTimeout(() => {
-        btn.textContent = prev;
+        btn.textContent = t('common.copy');
       }, 1400);
     });
   });
@@ -589,5 +811,6 @@
     });
   });
 
+  loadInitialLanguage();
   restoreSessionOnLoad();
 })();
