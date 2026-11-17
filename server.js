@@ -1153,6 +1153,11 @@ app.get('/api/events', requireSession, (req, res) => {
   });
 });
 
+// SPA routes for direct navigation & refresh
+app.get(['/questrunner', '/badgespoofer', '/badgespoofer/questrunner', '/donate', '/faq'], (req, res) => {
+  res.sendFile(path.join(__dirname, 'public', 'index.html'));
+});
+
 setInterval(() => {
   const cutoff = Date.now() - 6 * 60 * 60 * 1000;
   for (const [sid, session] of sessions.entries()) {
