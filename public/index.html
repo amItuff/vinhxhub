@@ -8,7 +8,7 @@
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,600;9..144,700&family=IBM+Plex+Mono:wght@400;500;600&family=IBM+Plex+Sans:wght@400;500;600;700&family=Space+Grotesk:wght@500;600;700&display=swap" rel="stylesheet" />
-  <link rel="stylesheet" href="styles.css" />
+  <link rel="stylesheet" href="/styles.css" />
 </head>
 <body>
   <header class="topbar">
@@ -16,14 +16,14 @@
       <div class="brand">
         <span class="brand-mark" aria-hidden="true">
           <svg width="24" height="24" viewBox="0 0 36 32" fill="none" xmlns="http://www.w3.org/2000/svg">
-            <path d="M2 0H34V24H13L2 31V0Z" fill="#FF3E1D"/>
+            <path d="M2 0H34V24H13L2 31V0Z" fill="#F2EFE9"/>
             <path d="M12.5 8L7.5 12L12.5 16" stroke="#0C0C0B" stroke-width="2.6" stroke-linecap="square" stroke-linejoin="miter"/>
             <path d="M23.5 8L28.5 12L23.5 16" stroke="#0C0C0B" stroke-width="2.6" stroke-linecap="square" stroke-linejoin="miter"/>
-            <path d="M19.8 7L16.2 17" stroke="#F2EFE9" stroke-width="2.6" stroke-linecap="square"/>
+            <path d="M19.8 7L16.2 17" stroke="#52525B" stroke-width="2.6" stroke-linecap="square"/>
           </svg>
         </span>
         <span class="brand-name" translate="no">VINHXHUB</span>
-        <span class="brand-tag" translate="no">ISSUE 0.01</span>
+        <span class="brand-tag" translate="no">VERSION 0.01</span>
       </div>
 
       <nav class="nav-tabs" aria-label="Điều hướng chính" data-i18n-aria="nav.aria">
@@ -38,6 +38,10 @@
         <button type="button" class="nav-tab" data-view="donate" id="nav-donate">
           <span class="nav-index" translate="no">03</span>
           <span data-i18n="nav.donate">Donate</span>
+        </button>
+        <button type="button" class="nav-tab" data-view="faq" id="nav-faq">
+          <span class="nav-index" translate="no">04</span>
+          <span data-i18n="nav.faq">FAQ</span>
         </button>
       </nav>
 
@@ -76,7 +80,6 @@
     <section class="masthead-strip" aria-hidden="true">
       <div class="masthead-meta">
         <span class="masthead-kicker" translate="no">VINHXHUB // DISCORD AUTOMATION SYSTEM</span>
-        <span class="masthead-edition" data-i18n="banner.edition">PHIÊN BẢN TẠM THỜI · KHÔNG LƯU TOKEN</span>
       </div>
       <div class="site-banner">
         <img
@@ -104,9 +107,9 @@
             </div>
 
             <form id="auth-form" class="auth-form" novalidate>
-              <div class="field-group">
+              <div class="field-group" id="token-field-group">
                 <label for="token-input" class="field-label" data-i18n="auth.tokenLabel">Discord Token</label>
-                <div class="input-wrap">
+                <div class="input-wrap" id="token-input-wrap">
                   <input
                     id="token-input"
                     name="token"
@@ -169,15 +172,15 @@
           </div>
           <div class="changelog-issue-row">
             <h2 id="changelog-title" class="changelog-heading" translate="no">0.01</h2>
-            <span class="changelog-tag" data-i18n="changelog.releaseTag">NHẬT KÝ PHÁT HÀNH</span>
+            <span class="changelog-tag" data-i18n="changelog.releaseTag">CHỨC NĂNG CHÍNH</span>
           </div>
           <div class="changelog-body">
-            <span class="changelog-label" data-i18n="changelog.changes">Thay đổi</span>
+            <span class="changelog-label" data-i18n="changelog.changes">Tính năng</span>
             <ul class="changelog-list">
-              <li data-i18n="changelog.item1">Chạy song song mặc định toàn bộ Quest (Video, Play, Stream, Activity) và tự động nhận Quest mới.</li>
-              <li data-i18n="changelog.item2">Xác nhận tài khoản qua ảnh đại diện + UID trước khi vào, giữ phiên khi tải lại trang (F5) cho tới khi bấm Thoát.</li>
-              <li data-i18n="changelog.item3">Tích hợp Discord Badge Spoofer (/api/v9/science) tùy chỉnh số game và số giờ chơi.</li>
-              <li data-i18n="changelog.item4">Trang Donate VietQR ACB tự động cập nhật nội dung và số tiền chuyển khoản.</li>
+              <li data-i18n="changelog.item1">Auto Quest Runner: tự nhận và chạy song song toàn bộ Quest (Video, Play, Stream, Activity) theo thời gian thực.</li>
+              <li data-i18n="changelog.item2">Badge Spoofer: gửi sự kiện Game Time &amp; Game Variety qua /api/v9/science với số game và số giờ tùy chỉnh.</li>
+              <li data-i18n="changelog.item3">Xác thực an toàn: đối chiếu ảnh đại diện + UID trước khi vào, phiên chỉ lưu tạm trong RAM server.</li>
+              <li data-i18n="changelog.item4">Hỗ trợ song ngữ VI/EN, VietQR Donate và trang FAQ minh bạch cơ chế bảo mật.</li>
             </ul>
           </div>
         </aside>
@@ -407,9 +410,75 @@
         </div>
       </div>
     </section>
+
+    <section id="view-faq" class="view-section" hidden aria-labelledby="faq-title">
+      <div class="dash-header">
+        <div class="dash-title-wrap">
+          <span class="section-index" translate="no">04 / TRANSPARENCY &amp; SAFETY</span>
+          <h1 id="faq-title" class="display-title" data-i18n="faq.title">Câu hỏi &amp; Bằng chứng An toàn</h1>
+          <p class="muted" data-i18n="faq.subtitle">Tất cả cơ chế xử lý token, lưu trữ phiên và giới hạn tốc độ đều minh bạch dựa trên mã nguồn thực tế.</p>
+        </div>
+      </div>
+
+      <div class="faq-grid">
+        <article class="editorial-block faq-item">
+          <div class="faq-head">
+            <span class="faq-num" translate="no">01</span>
+            <h2 data-i18n="faq.q1">Token có bị lưu vào ổ đĩa hay cơ sở dữ liệu không?</h2>
+          </div>
+          <p class="faq-ans" data-i18n="faq.a1">Không. Backend lưu phiên làm việc bằng cấu trúc Map tạm thời trong RAM (const sessions = new Map()). Không có file log, database hay dịch vụ bên thứ ba nào nhận hoặc lưu trữ token của bạn.</p>
+          <code class="faq-proof" translate="no">server.js → const sessions = new Map() // In-memory ephemeral sessions</code>
+        </article>
+
+        <article class="editorial-block faq-item">
+          <div class="faq-head">
+            <span class="faq-num" translate="no">02</span>
+            <h2 data-i18n="faq.q2">Trình duyệt lưu gì khi giữ phiên sau khi F5?</h2>
+          </div>
+          <p class="faq-ans" data-i18n="faq.a2">Trình duyệt chỉ lưu duy nhất mã phiên ngẫu nhiên UUID (vinhxhub_session_id) trong localStorage. Discord Token gốc không bao giờ được lưu trong localStorage, cookie hay DOM.</p>
+          <code class="faq-proof" translate="no">app.js → localStorage.setItem('vinhxhub_session_id', id)</code>
+        </article>
+
+        <article class="editorial-block faq-item">
+          <div class="faq-head">
+            <span class="faq-num" translate="no">03</span>
+            <h2 data-i18n="faq.q3">Khi bấm Thoát hoặc không dùng nữa thì sao?</h2>
+          </div>
+          <p class="faq-ans" data-i18n="faq.a3">Khi bấm Thoát (/api/auth/logout), server lập tức hủy mọi tác vụ đang chạy qua AbortController, đóng luồng SSE và xóa sạch phiên khỏi RAM. Ngoài ra, phiên không hoạt động tự động bị xóa sau 6 giờ.</p>
+          <code class="faq-proof" translate="no">server.js → sessions.delete(req.sessionId) &amp; 6h TTL cleanup</code>
+        </article>
+
+        <article class="editorial-block faq-item">
+          <div class="faq-head">
+            <span class="faq-num" translate="no">04</span>
+            <h2 data-i18n="faq.q4">Cơ chế chống Rate Limit và bảo vệ tài khoản?</h2>
+          </div>
+          <p class="faq-ans" data-i18n="faq.a4">Quest Runner dùng cấu hình Parallel Safe Turbo: tự đọc retry_after khi gặp HTTP 429, thêm độ trễ ngẫu nhiên (jitter ±1.5s) cho mỗi heartbeat 16.5s và cho phép dừng khẩn cấp bất cứ lúc nào.</p>
+          <code class="faq-proof" translate="no">server.js → heartbeatIntervalMs: 16500, heartbeatJitterMs: 1500, HTTP 429 backoff</code>
+        </article>
+
+        <article class="editorial-block faq-item">
+          <div class="faq-head">
+            <span class="faq-num" translate="no">05</span>
+            <h2 data-i18n="faq.q5">Web kết nối tới những máy chủ nào?</h2>
+          </div>
+          <p class="faq-ans" data-i18n="faq.a5">Chỉ gọi trực tiếp API chính thức của Discord (discord.com/api/v9), danh sách game công khai từ Discord CDN (cdn.discordapp.com/detectables/games.json) và thông số client windows từ cordapi.dolfi.es (có fallback tĩnh).</p>
+          <code class="faq-proof" translate="no">discord.com/api/v9 · cdn.discordapp.com · cordapi.dolfi.es</code>
+        </article>
+
+        <article class="editorial-block faq-item">
+          <div class="faq-head">
+            <span class="faq-num" translate="no">06</span>
+            <h2 data-i18n="faq.q6">Các lớp bảo vệ HTTP trên server là gì?</h2>
+          </div>
+          <p class="faq-ans" data-i18n="faq.a6">Express bật sẵn header chống nhúng iframe (X-Frame-Options: DENY), chống đoán MIME (X-Content-Type-Options: nosniff), giới hạn Referrer-Policy và giới hạn payload JSON tối đa 128KB.</p>
+          <code class="faq-proof" translate="no">X-Frame-Options: DENY · nosniff · express.json({ limit: '128kb' })</code>
+        </article>
+      </div>
+    </section>
   </main>
 
   <div id="toast-region" class="toast-region" aria-live="polite"></div>
-  <script src="app.js"></script>
+  <script src="/app.js"></script>
 </body>
 </html>
