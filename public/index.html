@@ -3,11 +3,11 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <meta name="theme-color" content="#050507" />
+  <meta name="theme-color" content="#0C0C0B" />
   <title>Vinhxhub 0.01 — Discord Automation</title>
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-  <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500;600&family=IBM+Plex+Sans:wght@400;500;600;700&display=swap" rel="stylesheet" />
+  <link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,600;9..144,700&family=IBM+Plex+Mono:wght@400;500;600&family=IBM+Plex+Sans:wght@400;500;600;700&family=Space+Grotesk:wght@500;600;700&display=swap" rel="stylesheet" />
   <link rel="stylesheet" href="styles.css" />
 </head>
 <body>
@@ -16,74 +16,96 @@
       <div class="brand">
         <span class="brand-mark" aria-hidden="true">
           <svg width="24" height="24" viewBox="0 0 36 32" fill="none" xmlns="http://www.w3.org/2000/svg">
-            <path d="M5 0H31C33.7614 0 36 2.23858 36 5V21C36 23.7614 33.7614 26 31 26H13L5 32V26H5C2.23858 26 0 23.7614 0 21V5C0 2.23858 2.23858 0 5 0Z" fill="#5865F2"/>
-            <path d="M12.5 8.5L7.5 13L12.5 17.5" stroke="#FFFFFF" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/>
-            <path d="M23.5 8.5L28.5 13L23.5 17.5" stroke="#FFFFFF" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/>
-            <path d="M19.8 7.5L16.2 18.5" stroke="#43E97B" stroke-width="2.4" stroke-linecap="round"/>
+            <path d="M2 0H34V24H13L2 31V0Z" fill="#FF3E1D"/>
+            <path d="M12.5 8L7.5 12L12.5 16" stroke="#0C0C0B" stroke-width="2.6" stroke-linecap="square" stroke-linejoin="miter"/>
+            <path d="M23.5 8L28.5 12L23.5 16" stroke="#0C0C0B" stroke-width="2.6" stroke-linecap="square" stroke-linejoin="miter"/>
+            <path d="M19.8 7L16.2 17" stroke="#F2EFE9" stroke-width="2.6" stroke-linecap="square"/>
           </svg>
         </span>
-        <span class="brand-name" translate="no">Vinhxhub</span>
-        <span class="brand-tag" translate="no">0.01</span>
+        <span class="brand-name" translate="no">VINHXHUB</span>
+        <span class="brand-tag" translate="no">ISSUE 0.01</span>
       </div>
 
-      <nav class="nav-tabs" aria-label="Điều hướng chính">
+      <nav class="nav-tabs" aria-label="Điều hướng chính" data-i18n-aria="nav.aria">
         <button type="button" class="nav-tab is-active" data-view="runner" id="nav-runner">
-          <span>Quest Runner</span>
+          <span class="nav-index" translate="no">01</span>
+          <span data-i18n="nav.runner">Quest Runner</span>
         </button>
         <button type="button" class="nav-tab" data-view="spoofer" id="nav-spoofer">
-          <span>Badge Spoofer</span>
+          <span class="nav-index" translate="no">02</span>
+          <span data-i18n="nav.spoofer">Badge Spoofer</span>
         </button>
         <button type="button" class="nav-tab" data-view="donate" id="nav-donate">
-          <span>Donate</span>
+          <span class="nav-index" translate="no">03</span>
+          <span data-i18n="nav.donate">Donate</span>
         </button>
       </nav>
 
-      <div class="topbar-actions" id="user-pill" hidden>
-        <div class="user-badge">
-          <span class="user-avatar-fallback" id="user-avatar-box">V</span>
-          <div class="user-meta">
-            <span class="user-name" id="user-display-name" translate="no">—</span>
-            <span class="user-build" id="user-uid-info" translate="no">UID —</span>
-          </div>
-        </div>
-        <button type="button" class="btn-ghost-sm" id="btn-logout" title="Đăng xuất">
-          <span>Thoát</span>
+      <div class="topbar-right">
+        <button type="button" class="btn-lang" id="btn-lang" aria-label="Switch language">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="square" stroke-linejoin="miter" aria-hidden="true">
+            <circle cx="12" cy="12" r="10"></circle>
+            <path d="M2 12h20"></path>
+            <path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"></path>
+          </svg>
+          <span id="lang-label" translate="no">VI / EN</span>
         </button>
+
+        <div class="topbar-actions" id="user-pill" hidden>
+          <div class="user-badge">
+            <span class="user-avatar-fallback" id="user-avatar-box">V</span>
+            <div class="user-meta">
+              <span class="user-name" id="user-display-name" translate="no">—</span>
+              <span class="user-build" id="user-uid-info" translate="no">UID —</span>
+            </div>
+          </div>
+          <button type="button" class="btn-ghost-sm" id="btn-logout" title="Đăng xuất" data-i18n-title="auth.logoutTitle">
+            <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="square" aria-hidden="true">
+              <path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"></path>
+              <polyline points="16 17 21 12 16 7"></polyline>
+              <line x1="21" y1="12" x2="9" y2="12"></line>
+            </svg>
+            <span data-i18n="auth.logout">Thoát</span>
+          </button>
+        </div>
       </div>
     </div>
   </header>
 
   <main class="container">
-    <div class="site-banner" aria-hidden="true">
-      <img
-        src="https://i.pinimg.com/originals/41/60/61/416061b9d95e206d7bbeb51e644cca6e.gif"
-        alt=""
-        class="site-banner-img"
-      />
-      <div class="site-banner-overlay"></div>
-      <div class="site-banner-caption">
-        <span class="banner-kicker" translate="no">vinhxhub · discord automation</span>
+    <section class="masthead-strip" aria-hidden="true">
+      <div class="masthead-meta">
+        <span class="masthead-kicker" translate="no">VINHXHUB // DISCORD AUTOMATION SYSTEM</span>
+        <span class="masthead-edition" data-i18n="banner.edition">PHIÊN BẢN TẠM THỜI · KHÔNG LƯU TOKEN</span>
       </div>
-    </div>
+      <div class="site-banner">
+        <img
+          src="https://i.pinimg.com/originals/41/60/61/416061b9d95e206d7bbeb51e644cca6e.gif"
+          alt=""
+          class="site-banner-img"
+        />
+        <div class="site-banner-frame"></div>
+      </div>
+    </section>
 
     <section id="view-auth" class="view-section is-visible" aria-labelledby="auth-title">
       <div class="auth-layout">
-        <div class="surface-card auth-card">
+        <div class="editorial-block auth-card">
           <div id="auth-step-input">
             <div class="auth-header">
               <div class="status-chip">
-                <span class="dot dot-emerald"></span>
-                <span>Token chỉ dùng tạm thời, không lưu lại</span>
+                <span class="dot dot-signal"></span>
+                <span data-i18n="auth.ephemeralChip">Token chỉ dùng tạm thời, không lưu lại</span>
               </div>
-              <h1 id="auth-title">Xác thực Discord Token</h1>
-              <p class="muted">
+              <h1 id="auth-title" class="display-title" data-i18n="auth.title">Xác thực Token.</h1>
+              <p class="muted" data-i18n="auth.subtitle">
                 Nhập Discord User Token để kiểm tra tài khoản, tự động nhận và chạy song song toàn bộ Quest.
               </p>
             </div>
 
             <form id="auth-form" class="auth-form" novalidate>
               <div class="field-group">
-                <label for="token-input" class="field-label">Discord Token</label>
+                <label for="token-input" class="field-label" data-i18n="auth.tokenLabel">Discord Token</label>
                 <div class="input-wrap">
                   <input
                     id="token-input"
@@ -92,10 +114,11 @@
                     autocomplete="off"
                     spellcheck="false"
                     placeholder="Dán Discord Token tại đây…"
+                    data-i18n-placeholder="auth.tokenPlaceholder"
                     required
                   />
-                  <button type="button" class="input-icon-btn" id="btn-toggle-token" aria-label="Hiện hoặc ẩn token">
-                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round">
+                  <button type="button" class="input-icon-btn" id="btn-toggle-token" aria-label="Hiện hoặc ẩn token" data-i18n-aria="auth.toggleTokenAria">
+                    <svg id="icon-eye" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="square" stroke-linejoin="miter">
                       <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"></path>
                       <circle cx="12" cy="12" r="3"></circle>
                     </svg>
@@ -105,7 +128,11 @@
               </div>
 
               <button type="submit" class="btn-primary btn-full" id="btn-connect">
-                <span class="btn-label">Kiểm tra Token</span>
+                <span class="btn-label" data-i18n="auth.verifyBtn">Kiểm tra Token</span>
+                <svg class="btn-arrow" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="square" aria-hidden="true">
+                  <line x1="5" y1="12" x2="19" y2="12"></line>
+                  <polyline points="12 5 19 12 12 19"></polyline>
+                </svg>
                 <span class="spinner" hidden aria-hidden="true"></span>
               </button>
             </form>
@@ -113,11 +140,11 @@
 
           <div id="auth-step-confirm" class="confirm-box" hidden>
             <div class="status-chip">
-              <span class="dot dot-emerald"></span>
-              <span>Xác nhận tài khoản Discord</span>
+              <span class="dot dot-signal"></span>
+              <span data-i18n="confirm.chip">Xác nhận tài khoản Discord</span>
             </div>
-            <h2>Đây có phải tài khoản của bạn?</h2>
-            <p class="muted">Kiểm tra ảnh đại diện và UID trước khi vào bảng điều khiển.</p>
+            <h2 class="display-subtitle" data-i18n="confirm.title">Đây có phải tài khoản của bạn?</h2>
+            <p class="muted" data-i18n="confirm.subtitle">Kiểm tra ảnh đại diện và UID trước khi vào bảng điều khiển.</p>
 
             <div class="confirm-account-card">
               <div class="confirm-avatar" id="confirm-avatar-box">V</div>
@@ -128,26 +155,29 @@
             </div>
 
             <div class="confirm-actions">
-              <button type="button" class="btn-secondary" id="btn-cancel-confirm">Đổi token khác</button>
-              <button type="button" class="btn-primary" id="btn-confirm-enter">Xác nhận &amp; Vào ngay</button>
+              <button type="button" class="btn-secondary" id="btn-cancel-confirm" data-i18n="confirm.cancel">Đổi token khác</button>
+              <button type="button" class="btn-primary" id="btn-confirm-enter" data-i18n="confirm.enter">Xác nhận &amp; Vào ngay</button>
             </div>
           </div>
         </div>
 
-        <aside class="surface-card changelog-card" aria-labelledby="changelog-title">
+        <aside class="editorial-block changelog-card" aria-labelledby="changelog-title">
           <div class="changelog-meta">
-            <span class="dot dot-white"></span>
-            <span translate="no">Vinhxhub</span>
-            <span class="muted-inline">16/11/2026</span>
+            <span class="dot dot-accent"></span>
+            <span translate="no">VINHXHUB</span>
+            <span class="muted-inline" translate="no">16.11.2026</span>
           </div>
-          <h2 id="changelog-title" class="changelog-heading" translate="no">Vinhxhub 0.01</h2>
+          <div class="changelog-issue-row">
+            <h2 id="changelog-title" class="changelog-heading" translate="no">0.01</h2>
+            <span class="changelog-tag" data-i18n="changelog.releaseTag">NHẬT KÝ PHÁT HÀNH</span>
+          </div>
           <div class="changelog-body">
-            <span class="changelog-label">Changes</span>
+            <span class="changelog-label" data-i18n="changelog.changes">Thay đổi</span>
             <ul class="changelog-list">
-              <li>Chạy song song mặc định toàn bộ Quest (Video, Play, Stream, Activity) và tự động nhận Quest mới.</li>
-              <li>Xác nhận tài khoản qua ảnh đại diện + UID trước khi vào, giữ phiên khi tải lại trang (F5) cho tới khi bấm Thoát.</li>
-              <li>Tích hợp Discord Badge Spoofer (/api/v9/science) tùy chỉnh số game và số giờ chơi.</li>
-              <li>Trang Donate VietQR ACB tự động cập nhật nội dung và số tiền chuyển khoản.</li>
+              <li data-i18n="changelog.item1">Chạy song song mặc định toàn bộ Quest (Video, Play, Stream, Activity) và tự động nhận Quest mới.</li>
+              <li data-i18n="changelog.item2">Xác nhận tài khoản qua ảnh đại diện + UID trước khi vào, giữ phiên khi tải lại trang (F5) cho tới khi bấm Thoát.</li>
+              <li data-i18n="changelog.item3">Tích hợp Discord Badge Spoofer (/api/v9/science) tùy chỉnh số game và số giờ chơi.</li>
+              <li data-i18n="changelog.item4">Trang Donate VietQR ACB tự động cập nhật nội dung và số tiền chuyển khoản.</li>
             </ul>
           </div>
         </aside>
@@ -156,69 +186,70 @@
 
     <section id="view-dashboard" class="view-section" hidden aria-labelledby="dash-title">
       <div class="dash-header">
-        <div>
-          <h1 id="dash-title">Bảng điều khiển Quest</h1>
-          <p class="muted">Tự động nhận quest mới và chạy song song ở tốc độ an toàn tối đa.</p>
+        <div class="dash-title-wrap">
+          <span class="section-index" translate="no">01 / QUEST ENGINE</span>
+          <h1 id="dash-title" class="display-title" data-i18n="dash.title">Bảng điều khiển Quest</h1>
+          <p class="muted" data-i18n="dash.subtitle">Tự động nhận quest mới và chạy song song ở tốc độ an toàn tối đa.</p>
         </div>
         <div class="dash-controls">
           <button type="button" class="btn-secondary" id="btn-refresh">
-            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="square" stroke-linejoin="miter" aria-hidden="true">
               <polyline points="23 4 23 10 17 10"></polyline>
               <path d="M20.49 15a9 9 0 1 1-2.12-9.36L23 10"></path>
             </svg>
-            <span>Làm mới</span>
+            <span data-i18n="dash.refresh">Làm mới</span>
           </button>
           <button type="button" class="btn-primary" id="btn-start-all">
-            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="square" stroke-linejoin="miter" aria-hidden="true">
               <polygon points="5 3 19 12 5 21 5 3"></polygon>
             </svg>
-            <span>Chạy tất cả</span>
+            <span data-i18n="dash.startAll">Chạy tất cả</span>
           </button>
           <button type="button" class="btn-danger" id="btn-stop" hidden>
-            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="square" stroke-linejoin="miter" aria-hidden="true">
               <rect x="6" y="6" width="12" height="12"></rect>
             </svg>
-            <span>Dừng lại</span>
+            <span data-i18n="dash.stop">Dừng lại</span>
           </button>
         </div>
       </div>
 
       <div class="stats-grid-3">
-        <div class="surface-card stat-card">
-          <span class="stat-label">Tổng Quest</span>
+        <div class="editorial-block stat-card">
+          <span class="stat-label" data-i18n="dash.statTotal">Tổng Quest</span>
           <strong class="stat-value" id="stat-total">0</strong>
         </div>
-        <div class="surface-card stat-card">
-          <span class="stat-label">Đang chạy song song</span>
-          <strong class="stat-value" id="stat-active">0</strong>
+        <div class="editorial-block stat-card">
+          <span class="stat-label" data-i18n="dash.statActive">Đang chạy song song</span>
+          <strong class="stat-value text-accent" id="stat-active">0</strong>
         </div>
-        <div class="surface-card stat-card">
-          <span class="stat-label">Đã hoàn thành</span>
-          <strong class="stat-value text-emerald" id="stat-completed">0</strong>
+        <div class="editorial-block stat-card">
+          <span class="stat-label" data-i18n="dash.statCompleted">Đã hoàn thành</span>
+          <strong class="stat-value text-signal" id="stat-completed">0</strong>
         </div>
       </div>
 
       <div class="workspace-grid">
         <div class="quests-panel">
           <div class="panel-head">
-            <h2>Danh sách nhiệm vụ</h2>
+            <h2 data-i18n="dash.questListTitle">Danh sách nhiệm vụ</h2>
             <span class="pill-count" id="quest-filter-count">0 khả dụng</span>
           </div>
           <div id="quests-list" class="quests-list"></div>
         </div>
 
-        <aside class="terminal-panel surface-card">
+        <aside class="terminal-panel editorial-block">
           <div class="panel-head terminal-head">
             <div class="terminal-title">
               <span class="dot" id="engine-status-dot"></span>
-              <h2>Telemetry Log</h2>
+              <h2 translate="no">TELEMETRY LOG</h2>
             </div>
-            <button type="button" class="btn-ghost-sm" id="btn-clear-log">Xóa log</button>
+            <button type="button" class="btn-ghost-sm" id="btn-clear-log" data-i18n="common.clearLog">Xóa log</button>
           </div>
           <div id="terminal-log" class="terminal-body" aria-live="polite">
             <div class="log-line log-info">
               <span class="log-ts">--:--:--</span>
-              <span class="log-msg">Sẵn sàng. Nhấn "Chạy tất cả" để bắt đầu.</span>
+              <span class="log-msg" data-i18n="dash.logReady">Sẵn sàng. Nhấn "Chạy tất cả" để bắt đầu.</span>
             </div>
           </div>
         </aside>
@@ -227,48 +258,51 @@
 
     <section id="view-spoofer" class="view-section" hidden aria-labelledby="spoofer-title">
       <div class="dash-header">
-        <div>
-          <h1 id="spoofer-title">Discord Badge Spoofer</h1>
-          <p class="muted">Gửi sự kiện launch_game và running_game_heartbeat tới /api/v9/science theo số game và thời gian tùy chỉnh.</p>
+        <div class="dash-title-wrap">
+          <span class="section-index" translate="no">02 / SCIENCE TELEMETRY</span>
+          <h1 id="spoofer-title" class="display-title">Discord Badge Spoofer</h1>
+          <p class="muted" data-i18n="spoofer.subtitle">Gửi sự kiện launch_game và running_game_heartbeat tới /api/v9/science theo số game và thời gian tùy chỉnh.</p>
         </div>
         <div class="badge-showcase">
           <div class="badge-chip">
             <img src="https://raw.githubusercontent.com/mezotv/discord-badges/7175b749242ae7e593f70b3b0130b83e22a947e1/assets/game-time/eternal.svg" alt="Game Time Eternal Badge" width="24" height="24" />
-            <span>Game Time</span>
+            <span translate="no">Game Time</span>
           </div>
           <div class="badge-chip">
             <img src="https://raw.githubusercontent.com/mezotv/discord-badges/7175b749242ae7e593f70b3b0130b83e22a947e1/assets/game-variety/universalist.svg" alt="Game Variety Universalist Badge" width="24" height="24" />
-            <span>Game Variety</span>
+            <span translate="no">Game Variety</span>
           </div>
         </div>
       </div>
 
       <div class="workspace-grid">
-        <div class="surface-card spoofer-form-card">
+        <div class="editorial-block spoofer-form-card">
           <form id="spoofer-form" class="spoofer-form">
             <div class="spoofer-row-2">
               <div class="field-group">
-                <label for="spoof-count" class="field-label">Số lượng game (<span id="spoof-max-games">…</span> khả dụng)</label>
+                <label for="spoof-count" class="field-label">
+                  <span data-i18n="spoofer.gameCountLabel">Số lượng game</span> (<span id="spoof-max-games">…</span> <span data-i18n="spoofer.availableSuffix">khả dụng</span>)
+                </label>
                 <input id="spoof-count" type="number" min="1" max="5000" value="50" class="text-input" required />
               </div>
               <div class="field-group">
-                <label for="spoof-hours" class="field-label">Thời gian mỗi game (giờ)</label>
+                <label for="spoof-hours" class="field-label" data-i18n="spoofer.hoursLabel">Thời gian mỗi game (giờ)</label>
                 <input id="spoof-hours" type="number" min="0.1" step="0.5" value="10" class="text-input" required />
               </div>
             </div>
 
             <div class="spoofer-summary">
-              <span>Tổng thời gian ước tính:</span>
+              <span data-i18n="spoofer.totalEstimate">Tổng thời gian ước tính:</span>
               <strong id="spoof-total-hours" class="mono-highlight">500 giờ</strong>
             </div>
 
             <div class="field-group">
-              <label for="spoof-cookie" class="field-label">Cookie cf_clearance (tùy chọn — dùng nếu Discord trả về 403)</label>
+              <label for="spoof-cookie" class="field-label" data-i18n="spoofer.cookieLabel">Cookie cf_clearance (tùy chọn — dùng nếu Discord trả về 403)</label>
               <input id="spoof-cookie" type="text" class="text-input mono-input" placeholder="cf_clearance=..." autocomplete="off" />
             </div>
 
             <div class="field-group">
-              <label for="spoof-fp" class="field-label">Executable Fingerprint (tùy chọn)</label>
+              <label for="spoof-fp" class="field-label" data-i18n="spoofer.fpLabel">Executable Fingerprint (tùy chọn)</label>
               <input id="spoof-fp" type="text" class="text-input mono-input" placeholder="Base64 fingerprint..." autocomplete="off" />
             </div>
 
@@ -283,24 +317,24 @@
             </div>
 
             <div class="spoofer-actions">
-              <button type="submit" class="btn-primary" id="btn-spoof-start">Bắt đầu Spoof</button>
-              <button type="button" class="btn-danger" id="btn-spoof-stop" hidden>Dừng Spoof</button>
+              <button type="submit" class="btn-primary" id="btn-spoof-start" data-i18n="spoofer.startBtn">Bắt đầu Spoof</button>
+              <button type="button" class="btn-danger" id="btn-spoof-stop" hidden data-i18n="spoofer.stopBtn">Dừng Spoof</button>
             </div>
           </form>
         </div>
 
-        <aside class="terminal-panel surface-card">
+        <aside class="terminal-panel editorial-block">
           <div class="panel-head terminal-head">
             <div class="terminal-title">
               <span class="dot" id="spoofer-status-dot"></span>
-              <h2>Spoofer Log</h2>
+              <h2 translate="no">SPOOFER LOG</h2>
             </div>
-            <button type="button" class="btn-ghost-sm" id="btn-clear-spoof-log">Xóa log</button>
+            <button type="button" class="btn-ghost-sm" id="btn-clear-spoof-log" data-i18n="common.clearLog">Xóa log</button>
           </div>
           <div id="spoofer-log" class="terminal-body" aria-live="polite">
             <div class="log-line log-info">
               <span class="log-ts">--:--:--</span>
-              <span class="log-msg">Nhập số game và số giờ rồi bấm "Bắt đầu Spoof".</span>
+              <span class="log-msg" data-i18n="spoofer.logReady">Nhập số game và số giờ rồi bấm "Bắt đầu Spoof".</span>
             </div>
           </div>
         </aside>
@@ -309,46 +343,47 @@
 
     <section id="view-donate" class="view-section" hidden aria-labelledby="donate-title">
       <div class="donate-shell">
-        <div class="surface-card donate-card">
+        <div class="editorial-block donate-card">
           <div class="donate-info">
             <div class="status-chip">
-              <span class="dot dot-emerald"></span>
-              <span>VietQR NAPAS 24/7</span>
+              <span class="dot dot-signal"></span>
+              <span translate="no">VIETQR NAPAS 24/7</span>
             </div>
-            <h1 id="donate-title">Ủng hộ phát triển</h1>
-            <p class="muted">
+            <span class="section-index" translate="no">03 / SUPPORT</span>
+            <h1 id="donate-title" class="display-title" data-i18n="donate.title">Ủng hộ phát triển</h1>
+            <p class="muted" data-i18n="donate.subtitle">
               Nếu công cụ giúp bạn tiết kiệm thời gian làm Discord Quest, bạn có thể ủng hộ tác giả qua chuyển khoản ngân hàng ACB bên dưới.
             </p>
 
             <div class="bank-details">
               <div class="bank-row">
-                <span class="bank-label">Ngân hàng</span>
-                <strong class="bank-val">ACB — Ngân hàng TMCP Á Châu</strong>
+                <span class="bank-label" data-i18n="donate.bankLabel">Ngân hàng</span>
+                <strong class="bank-val" data-i18n="donate.bankName">ACB — Ngân hàng TMCP Á Châu</strong>
               </div>
               <div class="bank-row">
-                <span class="bank-label">Chủ tài khoản</span>
+                <span class="bank-label" data-i18n="donate.ownerLabel">Chủ tài khoản</span>
                 <strong class="bank-val" translate="no">Nguyen Ngoc Tri Vinh</strong>
               </div>
               <div class="bank-row">
-                <span class="bank-label">Số tài khoản</span>
+                <span class="bank-label" data-i18n="donate.accLabel">Số tài khoản</span>
                 <div class="copy-group">
                   <code class="mono-highlight" id="bank-stk" translate="no">33689707</code>
-                  <button type="button" class="btn-copy" data-copy="33689707">Sao chép</button>
+                  <button type="button" class="btn-copy" data-copy="33689707" data-i18n="common.copy">Sao chép</button>
                 </div>
               </div>
               <div class="bank-row">
-                <span class="bank-label">Nội dung chuyển khoản</span>
+                <span class="bank-label" data-i18n="donate.memoLabel">Nội dung chuyển khoản</span>
                 <div class="copy-group">
                   <code class="mono-highlight" id="bank-memo" translate="no">donate vinhx hehe</code>
-                  <button type="button" class="btn-copy" data-copy="donate vinhx hehe">Sao chép</button>
+                  <button type="button" class="btn-copy" data-copy="donate vinhx hehe" data-i18n="common.copy">Sao chép</button>
                 </div>
               </div>
             </div>
 
             <div class="amount-selector">
-              <span class="field-label">Chọn nhanh số tiền (tùy chọn)</span>
+              <span class="field-label" data-i18n="donate.amountLabel">Chọn nhanh số tiền (tùy chọn)</span>
               <div class="preset-pills" id="amount-presets">
-                <button type="button" class="preset-btn is-active" data-amount="">Tùy nhập</button>
+                <button type="button" class="preset-btn is-active" data-amount="" data-i18n="donate.customAmount">Tùy nhập</button>
                 <button type="button" class="preset-btn" data-amount="20000">20,000 đ</button>
                 <button type="button" class="preset-btn" data-amount="50000">50,000 đ</button>
                 <button type="button" class="preset-btn" data-amount="100000">100,000 đ</button>
@@ -367,7 +402,7 @@
                 height="356"
               />
             </div>
-            <p class="qr-caption">Quét bằng ứng dụng ngân hàng hoặc ví điện tử hỗ trợ VietQR</p>
+            <p class="qr-caption" data-i18n="donate.qrCaption">Quét bằng ứng dụng ngân hàng hoặc ví điện tử hỗ trợ VietQR</p>
           </div>
         </div>
       </div>
