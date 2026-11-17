@@ -1,31 +1,28 @@
 /* ==========================================================================
-   VINHXHUB 0.01 — SWISS EDITORIAL / BRUTALIST ZINE DESIGN SYSTEM
-   Palette (4 core hex colors, strictly NO purple/blue gradients):
-     1. #0C0C0B  — Carbon Ink (Primary background)
-     2. #F2EFE9  — Newsprint Cream (Primary text & inverted surfaces)
-     3. #FF3E1D  — Swiss Vermilion (Primary brand accent & structural highlights)
-     4. #A3E635  — Signal Lime (Active / completed telemetry state)
+   VINHXHUB 0.01 — MONOCHROME SWISS EDITORIAL / BRUTALIST DESIGN SYSTEM
+   Palette (Strictly monochrome grayscale, zero purple/blue/loud gradients):
+     1. #0C0C0B  — Carbon Ink (Background)
+     2. #141412  — Charcoal Surface (Panels & Cards)
+     3. #F2EFE9  — Newsprint Cream (Primary Text & Active Surfaces)
+     4. #8E8E93  — Ash Gray (Secondary Text, Accents & Borders)
    Fonts:
      - Display / Headings: 'Space Grotesk', 'Fraunces'
      - Body: 'IBM Plex Sans'
      - Mono: 'IBM Plex Mono'
      (Strictly NO Inter, NO Roboto)
-   Forbidden:
-     - No emojis, no glassmorphism, no blur shadows, no uniform rounded cards
    ========================================================================== */
 
 :root {
   color-scheme: dark;
   --ink-bg: #0C0C0B;
   --ink-surface: #141412;
+  --ink-elevated: #1C1C1A;
   --paper: #F2EFE9;
-  --paper-muted: #9C9991;
-  --vermilion: #FF3E1D;
-  --vermilion-dim: rgba(255, 62, 29, 0.14);
-  --signal: #A3E635;
-  --signal-dim: rgba(163, 230, 53, 0.12);
-  --hairline: rgba(242, 239, 233, 0.16);
-  --hairline-strong: rgba(242, 239, 233, 0.36);
+  --ash: #8E8E93;
+  --ash-bright: #D4D4D8;
+  --ash-dim: rgba(142, 142, 147, 0.14);
+  --hairline: rgba(242, 239, 233, 0.14);
+  --hairline-strong: rgba(242, 239, 233, 0.32);
 
   --font-display: 'Space Grotesk', sans-serif;
   --font-serif: 'Fraunces', Georgia, serif;
@@ -35,7 +32,6 @@
   --ease-editorial: cubic-bezier(0.16, 1, 0.3, 1);
 }
 
-/* Fix: Ensure HTML [hidden] always wins over display: flex / grid */
 [hidden] {
   display: none !important;
 }
@@ -56,7 +52,7 @@ html, body {
   -webkit-font-smoothing: antialiased;
 }
 
-/* ─── Topbar (Crisp solid surface, zero glassmorphism) ─────────────────── */
+/* ─── Topbar ────────────────────────────────────────────────────────────── */
 .topbar {
   position: sticky;
   top: 0;
@@ -102,9 +98,10 @@ html, body {
   font-family: var(--font-mono);
   font-size: 10.5px;
   font-weight: 600;
-  padding: 2px 7px;
-  border: 1px solid var(--vermilion);
-  color: var(--vermilion);
+  padding: 2px 8px;
+  border: 1px solid var(--hairline-strong);
+  color: var(--ash-bright);
+  background: var(--ink-surface);
   letter-spacing: 0.06em;
 }
 
@@ -125,7 +122,7 @@ html, body {
   border: 0;
   border-right: 1px solid var(--hairline);
   background: transparent;
-  color: var(--paper-muted);
+  color: var(--ash);
   font-family: var(--font-display);
   font-size: 12.5px;
   font-weight: 600;
@@ -156,8 +153,8 @@ html, body {
 }
 
 .nav-tab.is-active .nav-index {
-  color: var(--vermilion);
-  opacity: 1;
+  color: var(--ink-bg);
+  opacity: 0.7;
 }
 
 .topbar-right {
@@ -184,8 +181,8 @@ html, body {
 }
 
 .btn-lang:hover {
-  border-color: var(--vermilion);
-  color: var(--vermilion);
+  border-color: var(--paper);
+  background: var(--ink-elevated);
 }
 
 .topbar-actions {
@@ -205,7 +202,7 @@ html, body {
 .user-avatar-fallback {
   width: 28px;
   height: 28px;
-  border: 1px solid var(--vermilion);
+  border: 1px solid var(--hairline-strong);
   background: var(--ink-surface);
   display: grid;
   place-items: center;
@@ -235,7 +232,7 @@ html, body {
 .user-build {
   font-family: var(--font-mono);
   font-size: 10.5px;
-  color: var(--paper-muted);
+  color: var(--ash);
 }
 
 /* ─── Container & Masthead ──────────────────────────────────────────────── */
@@ -259,17 +256,12 @@ html, body {
   margin-bottom: 14px;
 }
 
-.masthead-kicker,
-.masthead-edition {
+.masthead-kicker {
   font-family: var(--font-mono);
   font-size: 11px;
   letter-spacing: 0.08em;
   text-transform: uppercase;
-  color: var(--paper-muted);
-}
-
-.masthead-edition {
-  color: var(--signal);
+  color: var(--ash);
 }
 
 .site-banner {
@@ -285,14 +277,15 @@ html, body {
   height: 100%;
   object-fit: cover;
   object-position: center;
-  opacity: 0.78;
+  opacity: 0.72;
+  filter: grayscale(100%) contrast(1.08);
   display: block;
 }
 
 .site-banner-frame {
   position: absolute;
   inset: 0;
-  border-left: 4px solid var(--vermilion);
+  border-left: 4px solid var(--ash-bright);
   pointer-events: none;
 }
 
@@ -323,7 +316,7 @@ html, body {
   font-family: var(--font-mono);
   font-size: 11px;
   letter-spacing: 0.08em;
-  color: var(--vermilion);
+  color: var(--ash);
   margin-bottom: 8px;
 }
 
@@ -355,9 +348,9 @@ h2 {
 
 .muted {
   margin: 0;
-  color: var(--paper-muted);
+  color: var(--ash);
   font-size: 14px;
-  max-width: 56ch;
+  max-width: 58ch;
 }
 
 .status-chip {
@@ -370,27 +363,27 @@ h2 {
   font-family: var(--font-mono);
   font-size: 11px;
   letter-spacing: 0.03em;
-  color: var(--paper-muted);
+  color: var(--ash);
   margin-bottom: 18px;
 }
 
 .dot {
   width: 7px;
   height: 7px;
-  background: var(--paper-muted);
+  background: var(--ash);
   transition: background-color 180ms var(--ease-editorial);
 }
 
 .dot-signal {
-  background: var(--signal);
+  background: var(--ash-bright);
 }
 
 .dot-accent {
-  background: var(--vermilion);
+  background: var(--paper);
 }
 
 .dot-pulse {
-  background: var(--signal);
+  background: var(--paper);
   animation: pulseHard 1.1s steps(2, start) infinite;
 }
 
@@ -409,7 +402,7 @@ h2 {
 
 .auth-card {
   padding: 36px;
-  border-top: 3px solid var(--vermilion);
+  border-top: 3px solid var(--paper);
 }
 
 .auth-form {
@@ -426,7 +419,7 @@ h2 {
   font-weight: 500;
   text-transform: uppercase;
   letter-spacing: 0.06em;
-  color: var(--paper-muted);
+  color: var(--ash);
   margin-bottom: 8px;
 }
 
@@ -446,7 +439,7 @@ h2 {
   color: var(--paper);
   font-family: var(--font-mono);
   font-size: 13px;
-  transition: border-color 140ms var(--ease-editorial);
+  transition: border-color 140ms var(--ease-editorial), background-color 140ms var(--ease-editorial);
 }
 
 .input-wrap input {
@@ -456,7 +449,7 @@ h2 {
 .input-wrap input:focus-visible,
 .text-input:focus-visible,
 button:focus-visible {
-  outline: 2px solid var(--vermilion);
+  outline: 2px solid var(--paper);
   outline-offset: 2px;
 }
 
@@ -472,7 +465,7 @@ button:focus-visible {
   height: 30px;
   border: 0;
   background: transparent;
-  color: var(--paper-muted);
+  color: var(--ash);
   display: grid;
   place-items: center;
   cursor: pointer;
@@ -482,11 +475,43 @@ button:focus-visible {
   color: var(--paper);
 }
 
+/* Error Shake & Reveal Animation for "Vui lòng nhập Discord Token." */
+.input-wrap.is-invalid input {
+  border-color: var(--paper);
+  background: var(--ink-elevated);
+}
+
+.input-wrap.is-shaking {
+  animation: inputShake 360ms var(--ease-editorial);
+}
+
+@keyframes inputShake {
+  0%, 100% { transform: translateX(0); }
+  20% { transform: translateX(-6px); }
+  40% { transform: translateX(6px); }
+  60% { transform: translateX(-4px); }
+  80% { transform: translateX(3px); }
+}
+
 .field-error {
   margin: 8px 0 0;
   font-family: var(--font-mono);
   font-size: 12px;
-  color: var(--vermilion);
+  color: var(--paper);
+  border-left: 2px solid var(--paper);
+  padding-left: 8px;
+  animation: errorSlideIn 220ms var(--ease-editorial) both;
+}
+
+@keyframes errorSlideIn {
+  from {
+    opacity: 0;
+    transform: translateY(-4px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
 }
 
 .confirm-box {
@@ -506,7 +531,7 @@ button:focus-visible {
 .confirm-avatar {
   width: 52px;
   height: 52px;
-  border: 2px solid var(--vermilion);
+  border: 2px solid var(--paper);
   background: var(--ink-surface);
   display: grid;
   place-items: center;
@@ -538,7 +563,7 @@ button:focus-visible {
 .confirm-uid {
   font-family: var(--font-mono);
   font-size: 12px;
-  color: var(--paper-muted);
+  color: var(--ash);
 }
 
 .confirm-actions {
@@ -550,11 +575,11 @@ button:focus-visible {
   flex: 1;
 }
 
-/* Offset Editorial Changelog Column */
+/* Offset Editorial Feature Column */
 .changelog-card {
   padding: 28px;
   margin-top: 28px;
-  border-left: 3px solid var(--paper);
+  border-left: 3px solid var(--ash-bright);
 }
 
 .changelog-meta {
@@ -568,7 +593,7 @@ button:focus-visible {
 }
 
 .muted-inline {
-  color: var(--paper-muted);
+  color: var(--ash);
 }
 
 .changelog-issue-row {
@@ -592,7 +617,7 @@ button:focus-visible {
 .changelog-tag {
   font-family: var(--font-mono);
   font-size: 10.5px;
-  color: var(--vermilion);
+  color: var(--ash);
   letter-spacing: 0.08em;
 }
 
@@ -607,7 +632,7 @@ button:focus-visible {
   font-family: var(--font-mono);
   font-size: 11px;
   text-transform: uppercase;
-  color: var(--paper-muted);
+  color: var(--ash);
   padding-top: 3px;
 }
 
@@ -622,10 +647,10 @@ button:focus-visible {
 }
 
 .changelog-list li::marker {
-  color: var(--vermilion);
+  color: var(--ash);
 }
 
-/* ─── Buttons (Zero blur shadows, crisp tactile offset) ─────────────────── */
+/* ─── Buttons ───────────────────────────────────────────────────────────── */
 button {
   font-family: inherit;
 }
@@ -653,15 +678,14 @@ button {
 .btn-primary {
   height: 40px;
   padding: 0 18px;
-  border: 1px solid var(--vermilion);
-  background: var(--vermilion);
+  border: 1px solid var(--paper);
+  background: var(--paper);
   color: var(--ink-bg);
 }
 
 .btn-primary:hover:not(:disabled) {
-  background: var(--paper);
-  border-color: var(--paper);
-  color: var(--ink-bg);
+  background: var(--ash-bright);
+  border-color: var(--ash-bright);
 }
 
 .btn-primary:hover:not(:disabled) .btn-arrow {
@@ -701,19 +725,19 @@ button {
 
 .btn-secondary:hover:not(:disabled) {
   border-color: var(--paper);
-  background: var(--ink-surface);
+  background: var(--ink-elevated);
 }
 
 .btn-danger {
   height: 40px;
   padding: 0 16px;
-  border: 1px solid var(--vermilion);
-  background: var(--vermilion-dim);
-  color: var(--vermilion);
+  border: 1px solid var(--ash-bright);
+  background: var(--ink-elevated);
+  color: var(--paper);
 }
 
 .btn-danger:hover {
-  background: var(--vermilion);
+  background: var(--paper);
   color: var(--ink-bg);
 }
 
@@ -722,7 +746,7 @@ button {
   padding: 0 11px;
   border: 1px solid var(--hairline);
   background: var(--ink-bg);
-  color: var(--paper-muted);
+  color: var(--ash);
   font-size: 12px;
 }
 
@@ -786,7 +810,7 @@ button {
   font-size: 11px;
   text-transform: uppercase;
   letter-spacing: 0.06em;
-  color: var(--paper-muted);
+  color: var(--ash);
   margin-bottom: 10px;
 }
 
@@ -799,11 +823,11 @@ button {
 }
 
 .text-accent {
-  color: var(--vermilion);
+  color: var(--ash-bright);
 }
 
 .text-signal {
-  color: var(--signal);
+  color: var(--paper);
 }
 
 /* ─── Asymmetric Workspace Grid ─────────────────────────────────────────── */
@@ -838,7 +862,7 @@ button {
 
 .quest-card {
   padding: 20px 22px;
-  transition: border-color 160ms var(--ease-editorial), transform 160ms var(--ease-editorial);
+  transition: border-color 160ms var(--ease-editorial);
 }
 
 .quest-card:hover {
@@ -846,7 +870,7 @@ button {
 }
 
 .quest-card.is-running {
-  border-left: 4px solid var(--vermilion);
+  border-left: 4px solid var(--paper);
 }
 
 .quest-top {
@@ -866,7 +890,7 @@ button {
 
 .quest-sub {
   font-size: 13px;
-  color: var(--paper-muted);
+  color: var(--ash);
 }
 
 .task-badge {
@@ -876,13 +900,13 @@ button {
   padding: 3px 8px;
   border: 1px solid var(--hairline);
   background: var(--ink-bg);
-  color: var(--paper-muted);
+  color: var(--ash);
 }
 
 .task-badge.is-done {
-  border-color: var(--signal);
-  background: var(--signal-dim);
-  color: var(--signal);
+  border-color: var(--paper);
+  background: var(--paper);
+  color: var(--ink-bg);
 }
 
 .progress-meta {
@@ -891,7 +915,7 @@ button {
   font-family: var(--font-mono);
   font-size: 12px;
   font-variant-numeric: tabular-nums;
-  color: var(--paper-muted);
+  color: var(--ash);
   margin-bottom: 8px;
 }
 
@@ -905,7 +929,7 @@ button {
 
 .progress-fill {
   height: 100%;
-  background: var(--vermilion);
+  background: var(--ash-bright);
   position: relative;
   transition: width 360ms var(--ease-editorial), background-color 200ms var(--ease-editorial);
 }
@@ -916,8 +940,8 @@ button {
   inset: 0;
   background-image: repeating-linear-gradient(
     -45deg,
-    rgba(12, 12, 11, 0.25) 0px,
-    rgba(12, 12, 11, 0.25) 6px,
+    rgba(12, 12, 11, 0.3) 0px,
+    rgba(12, 12, 11, 0.3) 6px,
     transparent 6px,
     transparent 12px
   );
@@ -931,7 +955,7 @@ button {
 }
 
 .progress-fill.is-done {
-  background: var(--signal);
+  background: var(--paper);
 }
 
 .quest-actions {
@@ -973,16 +997,16 @@ button {
 }
 
 .log-ts {
-  color: var(--paper-muted);
+  color: var(--ash);
   flex-shrink: 0;
   font-variant-numeric: tabular-nums;
 }
 
-.log-ok .log-msg { color: var(--signal); }
-.log-warn .log-msg { color: var(--vermilion); }
-.log-error .log-msg { color: var(--vermilion); font-weight: 600; }
-.log-progress .log-msg { color: var(--paper-muted); }
-.log-info .log-msg { color: var(--paper); }
+.log-ok .log-msg { color: var(--paper); font-weight: 500; }
+.log-warn .log-msg { color: var(--ash-bright); }
+.log-error .log-msg { color: var(--paper); text-decoration: underline; }
+.log-progress .log-msg { color: var(--ash); }
+.log-info .log-msg { color: var(--ash-bright); }
 
 /* ─── Spoofer ───────────────────────────────────────────────────────────── */
 .badge-showcase {
@@ -1023,12 +1047,12 @@ button {
   padding: 13px 16px;
   background: var(--ink-bg);
   border: 1px solid var(--hairline);
-  border-left: 3px solid var(--signal);
+  border-left: 3px solid var(--paper);
   display: flex;
   align-items: center;
   justify-content: space-between;
   font-size: 13px;
-  color: var(--paper-muted);
+  color: var(--ash);
 }
 
 .spoofer-actions {
@@ -1048,7 +1072,7 @@ button {
   grid-template-columns: 1.2fr 0.8fr;
   gap: 36px;
   align-items: center;
-  border-top: 3px solid var(--vermilion);
+  border-top: 3px solid var(--paper);
 }
 
 .bank-details {
@@ -1072,7 +1096,7 @@ button {
   font-family: var(--font-mono);
   font-size: 11.5px;
   text-transform: uppercase;
-  color: var(--paper-muted);
+  color: var(--ash);
 }
 
 .bank-val {
@@ -1119,7 +1143,7 @@ button {
   padding: 0 12px;
   border: 1px solid var(--hairline);
   background: var(--ink-bg);
-  color: var(--paper-muted);
+  color: var(--ash);
   font-family: var(--font-mono);
   font-size: 12px;
   font-variant-numeric: tabular-nums;
@@ -1131,8 +1155,8 @@ button {
 }
 
 .preset-btn.is-active {
-  border-color: var(--vermilion);
-  background: var(--vermilion);
+  border-color: var(--paper);
+  background: var(--paper);
   color: var(--ink-bg);
 }
 
@@ -1159,7 +1183,66 @@ button {
   margin: 14px 0 0;
   font-family: var(--font-mono);
   font-size: 11.5px;
-  color: var(--paper-muted);
+  color: var(--ash);
+}
+
+/* ─── FAQ Grid ──────────────────────────────────────────────────────────── */
+.faq-grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 18px;
+}
+
+.faq-item {
+  padding: 24px 26px;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  border-left: 3px solid var(--hairline-strong);
+  transition: border-color 160ms var(--ease-editorial);
+}
+
+.faq-item:hover {
+  border-left-color: var(--paper);
+}
+
+.faq-head {
+  display: flex;
+  align-items: baseline;
+  gap: 12px;
+}
+
+.faq-num {
+  font-family: var(--font-serif);
+  font-size: 20px;
+  font-weight: 700;
+  color: var(--ash);
+  flex-shrink: 0;
+}
+
+.faq-item h2 {
+  font-size: 14.5px;
+  text-transform: none;
+  letter-spacing: -0.01em;
+  line-height: 1.35;
+}
+
+.faq-ans {
+  margin: 0;
+  font-size: 13.5px;
+  color: var(--ash);
+  line-height: 1.6;
+}
+
+.faq-proof {
+  margin-top: auto;
+  padding: 8px 10px;
+  background: var(--ink-bg);
+  border: 1px solid var(--hairline);
+  font-family: var(--font-mono);
+  font-size: 11.5px;
+  color: var(--ash-bright);
+  word-break: break-word;
 }
 
 /* ─── Toast ─────────────────────────────────────────────────────────────── */
@@ -1176,7 +1259,7 @@ button {
 .toast {
   padding: 11px 16px;
   background: var(--paper);
-  border-left: 4px solid var(--vermilion);
+  border-left: 4px solid var(--ash);
   color: var(--ink-bg);
   font-family: var(--font-display);
   font-size: 13px;
@@ -1188,7 +1271,8 @@ button {
 @media (max-width: 960px) {
   .auth-layout,
   .workspace-grid,
-  .donate-card {
+  .donate-card,
+  .faq-grid {
     grid-template-columns: 1fr;
   }
   .changelog-card {
