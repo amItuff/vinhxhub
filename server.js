@@ -8,7 +8,13 @@ const API_BASE = 'https://discord.com/api/v9';
 const FALLBACK_BUILD_NUMBER = 504649;
 const BUILD_CACHE_TTL_MS = 60 * 60 * 1000; // 1 hour
 
-// Badge Spoofer constants (from spoofer.py)
+// Ephemeral AES-256-GCM key for stateless Vercel serverless session fallback
+const EPHEMERAL_KEY = crypto
+  .createHash('sha256')
+  .update(process.env.SESSION_SECRET || `${process.env.VERCEL_URL || 'vinhxhub-local'}-${FALLBACK_BUILD_NUMBER}`)
+  .digest();
+
+// Badge Spoofer constants
 const SCIENCE_PROPERTIES_URL = 'https://cordapi.dolfi.es/api/v2/properties/windows';
 const GAMES_CDN_URL = 'https://cdn.discordapp.com/detectables/games.json';
 const SPOOFER_CLIENT_VERSION = '1.0.9253';
@@ -28,7 +34,6 @@ const SUPPORTED_TASKS = [
   'WATCH_VIDEO_ON_MOBILE',
 ];
 
-// Default Parallel Safe Turbo profile
 const DEFAULT_PROFILE = {
   label: 'Parallel Safe Turbo',
   parallel: true,
@@ -68,6 +73,39 @@ app.use((req, res, next) => {
 
 app.use(express.static(path.join(__dirname, 'public')));
 
+// ─── Stateless Session Sealing (Vercel Serverless Safe) ─────────────────────
+
+function sealSessionPayload(payload) {
+  const iv = crypto.randomBytes(12);
+  const cipher = crypto.createCipheriv('aes-256-gcm', EPHEMERAL_KEY, iv);
+  const enc = Buffer.concat([cipher.update(JSON.stringify(payload), 'utf8'), cipher.final()]);
+  const tag = cipher.getAuthTag();
+  return `v2.${iv.toString('base64url')}.${tag.toString('base64url')}.${enc.toString('base64url')}`;
+}
+
+function unsealSessionPayload(sid) {
+  if (typeof sid !== 'string' || !sid.startsWith('v2.')) return null;
+  try {
+    const [, ivB64, tagB64, encB64] = sid.split('.');
+    const decipher = crypto.createDecipheriv(
+      'aes-256-gcm',
+      EPHEMERAL_KEY,
+      Buffer.from(ivB64, 'base64url')
+    );
+    decipher.setAuthTag(Buffer.from(tagB64, 'base64url'));
+    const dec = Buffer.concat([
+      decipher.update(Buffer.from(encB64, 'base64url')),
+      decipher.final(),
+    ]);
+    const data = JSON.parse(dec.toString('utf8'));
+    if (!data?.token || !data?.user?.id) return null;
+    if (data.exp && Date.now() > data.exp) return null;
+    return data;
+  } catch {
+    return null;
+  }
+}
+
 // ─── Helpers ─────────────────────────────────────────────────────────────────
 
 const sleep = (ms, signal) =>
@@ -90,56 +128,64 @@ function randomInt(min, max) {
   return Math.floor(Math.random() * (max - min + 1)) + min;
 }
 
-async function fetchLatestBuildNumber() {
+function sanitizeToken(raw) {
+  if (typeof raw !== 'string') return '';
+  return raw.trim().replace(/^["']|["']$/g, '').trim();
+}
+
+function refreshBuildNumberInBackground() {
   const now = Date.now();
   if (now - cachedBuildNumber.fetchedAt < BUILD_CACHE_TTL_MS && cachedBuildNumber.fetchedAt > 0) {
-    return cachedBuildNumber.value;
+    return;
   }
+  cachedBuildNumber.fetchedAt = now;
 
-  try {
-    const controller = new AbortController();
-    const timeout = setTimeout(() => controller.abort(), 8000);
-    const res = await fetch('https://discord.com/app', {
-      headers: {
-        'User-Agent':
-          'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/128.0.0.0 Safari/537.36',
-      },
-      signal: controller.signal,
-    });
-    clearTimeout(timeout);
+  (async () => {
+    try {
+      const controller = new AbortController();
+      const timeout = setTimeout(() => controller.abort(), 2500);
+      const res = await fetch('https://discord.com/app', {
+        headers: {
+          'User-Agent':
+            'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/128.0.0.0 Safari/537.36',
+        },
+        signal: controller.signal,
+      });
+      clearTimeout(timeout);
+      if (!res.ok) return;
+      const html = await res.text();
+      const matches = [...html.matchAll(/\/assets\/([a-f0-9]+)\.js/g)].map((m) => m[1]);
+      const candidates = matches.slice(-3);
 
-    if (!res.ok) return FALLBACK_BUILD_NUMBER;
-    const html = await res.text();
-    const matches = [...html.matchAll(/\/assets\/([a-f0-9]+)\.js/g)].map((m) => m[1]);
-    const candidates = matches.slice(-5);
-
-    for (const hash of candidates) {
-      try {
-        const ac = new AbortController();
-        const at = setTimeout(() => ac.abort(), 6000);
-        const jsRes = await fetch(`https://discord.com/assets/${hash}.js`, {
-          headers: { 'User-Agent': USER_AGENT },
-          signal: ac.signal,
-        });
-        clearTimeout(at);
-        if (!jsRes.ok) continue;
-        const jsText = await jsRes.text();
-        const bnMatch = jsText.match(/buildNumber["\s:]+["\s]*(\d{5,7})/);
-        if (bnMatch) {
-          const bn = parseInt(bnMatch[1], 10);
-          cachedBuildNumber = { value: bn, fetchedAt: Date.now() };
-          return bn;
+      for (const hash of candidates) {
+        try {
+          const ac = new AbortController();
+          const at = setTimeout(() => ac.abort(), 2500);
+          const jsRes = await fetch(`https://discord.com/assets/${hash}.js`, {
+            headers: { 'User-Agent': USER_AGENT },
+            signal: ac.signal,
+          });
+          clearTimeout(at);
+          if (!jsRes.ok) continue;
+          const jsText = await jsRes.text();
+          const bnMatch = jsText.match(/buildNumber["\s:]+["\s]*(\d{5,7})/);
+          if (bnMatch) {
+            cachedBuildNumber = { value: parseInt(bnMatch[1], 10), fetchedAt: Date.now() };
+            return;
+          }
+        } catch {
+          continue;
         }
-      } catch {
-        continue;
       }
+    } catch {
+      // keep fallback silently
     }
-  } catch {
-    // Fallback silently
-  }
+  })();
+}
 
-  cachedBuildNumber = { value: FALLBACK_BUILD_NUMBER, fetchedAt: Date.now() };
-  return FALLBACK_BUILD_NUMBER;
+function getBuildNumberFast() {
+  refreshBuildNumberInBackground();
+  return cachedBuildNumber.value;
 }
 
 function makeSuperProperties(buildNumber) {
@@ -957,10 +1003,30 @@ async function startBadgeSpoofer(session, { gameCount, hoursPerGame, cookie = ''
 
 function requireSession(req, res, next) {
   const sid = req.headers['x-session-id'] || req.query.sessionId;
-  if (!sid || !sessions.has(sid)) {
+  if (!sid) {
     return res.status(401).json({ error: 'Phiên đăng nhập không hợp lệ hoặc đã hết hạn.' });
   }
-  const session = sessions.get(sid);
+
+  let session = sessions.get(sid);
+  if (!session) {
+    const unsealed = unsealSessionPayload(sid);
+    if (!unsealed) {
+      return res.status(401).json({ error: 'Phiên đăng nhập không hợp lệ hoặc đã hết hạn.' });
+    }
+    session = {
+      token: unsealed.token,
+      buildNumber: unsealed.buildNumber || FALLBACK_BUILD_NUMBER,
+      user: unsealed.user,
+      running: false,
+      abortController: null,
+      spooferRunning: false,
+      spooferAbort: null,
+      sseClients: new Set(),
+      lastSeen: Date.now(),
+    };
+    sessions.set(sid, session);
+  }
+
   session.lastSeen = Date.now();
   req.session = session;
   req.sessionId = sid;
@@ -970,12 +1036,12 @@ function requireSession(req, res, next) {
 // ─── API Routes ──────────────────────────────────────────────────────────────
 
 app.post('/api/auth/verify', async (req, res) => {
-  const rawToken = typeof req.body?.token === 'string' ? req.body.token.trim() : '';
+  const rawToken = sanitizeToken(req.body?.token);
   if (!rawToken || rawToken.length < 20) {
     return res.status(400).json({ error: 'Token Discord không hợp lệ.' });
   }
 
-  const buildNumber = await fetchLatestBuildNumber();
+  const buildNumber = getBuildNumberFast();
   const tempSession = { token: rawToken, buildNumber };
 
   try {
@@ -987,20 +1053,28 @@ app.post('/api/auth/verify', async (req, res) => {
     }
 
     const user = userRes.data;
-    const sessionId = crypto.randomUUID();
     const avatarUrl = user.avatar
       ? `https://cdn.discordapp.com/avatars/${user.id}/${user.avatar}.png?size=128`
       : null;
 
+    const userObj = {
+      id: user.id,
+      username: user.username,
+      globalName: user.global_name || user.username,
+      avatarUrl,
+    };
+
+    const sessionId = sealSessionPayload({
+      token: rawToken,
+      buildNumber,
+      user: userObj,
+      exp: Date.now() + 6 * 60 * 60 * 1000,
+    });
+
     sessions.set(sessionId, {
       token: rawToken,
       buildNumber,
-      user: {
-        id: user.id,
-        username: user.username,
-        globalName: user.global_name || user.username,
-        avatarUrl,
-      },
+      user: userObj,
       running: false,
       abortController: null,
       spooferRunning: false,
@@ -1012,7 +1086,7 @@ app.post('/api/auth/verify', async (req, res) => {
     res.json({
       sessionId,
       buildNumber,
-      user: sessions.get(sessionId).user,
+      user: userObj,
     });
   } catch (err) {
     res.status(502).json({ error: `Không thể kết nối tới Discord: ${err.message}` });
@@ -1171,7 +1245,7 @@ setInterval(() => {
 
 if (require.main === module) {
   app.listen(PORT, () => {
-    console.log(`Vinhxhub v0.01 server listening on http://localhost:${PORT}`);
+    console.log(`Vinhxhub v0.02 server listening on http://localhost:${PORT}`);
   });
 }
 
