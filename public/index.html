@@ -3,8 +3,8 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <meta name="theme-color" content="#0C0C0B" />
-  <title>Vinhxhub 0.01 — Discord Automation</title>
+  <meta name="theme-color" content="#0A0A09" />
+  <title>Vinhxhub 0.02 — Discord Automation</title>
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,600;9..144,700&family=IBM+Plex+Mono:wght@400;500;600&family=IBM+Plex+Sans:wght@400;500;600;700&family=Space+Grotesk:wght@500;600;700&display=swap" rel="stylesheet" />
@@ -17,13 +17,13 @@
         <span class="brand-mark" aria-hidden="true">
           <svg width="24" height="24" viewBox="0 0 36 32" fill="none" xmlns="http://www.w3.org/2000/svg">
             <path d="M2 0H34V24H13L2 31V0Z" fill="#F2EFE9"/>
-            <path d="M12.5 8L7.5 12L12.5 16" stroke="#0C0C0B" stroke-width="2.6" stroke-linecap="square" stroke-linejoin="miter"/>
-            <path d="M23.5 8L28.5 12L23.5 16" stroke="#0C0C0B" stroke-width="2.6" stroke-linecap="square" stroke-linejoin="miter"/>
+            <path d="M12.5 8L7.5 12L12.5 16" stroke="#0A0A09" stroke-width="2.6" stroke-linecap="square" stroke-linejoin="miter"/>
+            <path d="M23.5 8L28.5 12L23.5 16" stroke="#0A0A09" stroke-width="2.6" stroke-linecap="square" stroke-linejoin="miter"/>
             <path d="M19.8 7L16.2 17" stroke="#52525B" stroke-width="2.6" stroke-linecap="square"/>
           </svg>
         </span>
         <span class="brand-name" translate="no">VINHXHUB</span>
-        <span class="brand-tag" translate="no">VERSION 0.01</span>
+        <span class="brand-tag" translate="no">VERSION 0.02</span>
       </div>
 
       <nav class="nav-tabs" aria-label="Điều hướng chính" data-i18n-aria="nav.aria">
@@ -77,9 +77,10 @@
   </header>
 
   <main class="container">
-    <section class="masthead-strip" aria-hidden="true">
+    <section class="masthead-strip stagger-1" aria-hidden="true">
       <div class="masthead-meta">
         <span class="masthead-kicker" translate="no">VINHXHUB // DISCORD AUTOMATION SYSTEM</span>
+        <span class="masthead-kicker" translate="no">BUILD 0.02</span>
       </div>
       <div class="site-banner">
         <img
@@ -93,7 +94,7 @@
 
     <section id="view-auth" class="view-section is-visible" aria-labelledby="auth-title">
       <div class="auth-layout">
-        <div class="editorial-block auth-card">
+        <div class="editorial-block auth-card stagger-2">
           <div id="auth-step-input">
             <div class="auth-header">
               <div class="status-chip">
@@ -121,7 +122,7 @@
                     required
                   />
                   <button type="button" class="input-icon-btn" id="btn-toggle-token" aria-label="Hiện hoặc ẩn token" data-i18n-aria="auth.toggleTokenAria">
-                    <svg id="icon-eye" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="square" stroke-linejoin="miter">
+                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="square" stroke-linejoin="miter">
                       <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"></path>
                       <circle cx="12" cy="12" r="3"></circle>
                     </svg>
@@ -164,24 +165,46 @@
           </div>
         </div>
 
-        <aside class="editorial-block changelog-card" aria-labelledby="changelog-title">
-          <div class="changelog-meta">
-            <span class="dot dot-accent"></span>
-            <span translate="no">VINHXHUB</span>
-            <span class="muted-inline" translate="no">16.11.2026</span>
+        <aside class="editorial-block changelog-card stagger-3" aria-labelledby="changelog-title">
+          <div class="changelog-header-bar">
+            <div class="changelog-meta">
+              <span class="dot dot-accent"></span>
+              <span translate="no">VINHXHUB</span>
+              <span class="muted-inline" id="changelog-date" translate="no">18.11.2026</span>
+            </div>
+            <div class="version-switcher" role="tablist" aria-label="Phiên bản">
+              <button type="button" class="ver-tab is-active" data-ver="0.02" id="ver-tab-02" translate="no">v0.02</button>
+              <button type="button" class="ver-tab" data-ver="0.01" id="ver-tab-01" translate="no">v0.01</button>
+            </div>
           </div>
+
           <div class="changelog-issue-row">
-            <h2 id="changelog-title" class="changelog-heading" translate="no">0.01</h2>
-            <span class="changelog-tag" data-i18n="changelog.releaseTag">CHỨC NĂNG CHÍNH</span>
+            <h2 id="changelog-title" class="changelog-heading" translate="no">0.02</h2>
+            <span class="changelog-tag" id="changelog-badge" data-i18n="changelog.v02Tag">PHIÊN BẢN MỚI</span>
           </div>
-          <div class="changelog-body">
-            <span class="changelog-label" data-i18n="changelog.changes">Tính năng</span>
-            <ul class="changelog-list">
-              <li data-i18n="changelog.item1">Auto Quest Runner: tự nhận và chạy song song toàn bộ Quest (Video, Play, Stream, Activity) theo thời gian thực.</li>
-              <li data-i18n="changelog.item2">Badge Spoofer: gửi sự kiện Game Time &amp; Game Variety qua /api/v9/science với số game và số giờ tùy chỉnh.</li>
-              <li data-i18n="changelog.item3">Xác thực an toàn: đối chiếu ảnh đại diện + UID trước khi vào, phiên chỉ lưu tạm trong RAM server.</li>
-              <li data-i18n="changelog.item4">Hỗ trợ song ngữ VI/EN, VietQR Donate và trang FAQ minh bạch cơ chế bảo mật.</li>
-            </ul>
+
+          <div class="changelog-pane" id="changelog-v02">
+            <div class="changelog-body">
+              <span class="changelog-label" data-i18n="changelog.changes">Tính năng</span>
+              <ul class="changelog-list">
+                <li data-i18n="changelog.v02Item1">Xây dựng lại toàn bộ giao diện Monochrome Swiss Editorial &amp; hệ thống chuyển động mượt.</li>
+                <li data-i18n="changelog.v02Item2">Sửa lỗi timeout khi kết nối Token trên Vercel, tự động lọc dấu ngoặc kép và hỗ trợ phiên mã hóa AES-GCM.</li>
+                <li data-i18n="changelog.v02Item3">Thêm trang FAQ liệt kê đầy đủ bằng chứng an toàn và chuyển đổi song ngữ VI / EN.</li>
+                <li data-i18n="changelog.v02Item4">Định tuyến đường dẫn sạch (/questrunner, /badgespoofer, /donate, /faq).</li>
+              </ul>
+            </div>
+          </div>
+
+          <div class="changelog-pane" id="changelog-v01" hidden>
+            <div class="changelog-body">
+              <span class="changelog-label" data-i18n="changelog.changes">Tính năng</span>
+              <ul class="changelog-list">
+                <li data-i18n="changelog.v01Item1">Auto Quest Runner: tự nhận và chạy song song toàn bộ Quest (Video, Play, Stream, Activity).</li>
+                <li data-i18n="changelog.v01Item2">Badge Spoofer: gửi sự kiện Game Time &amp; Game Variety qua /api/v9/science.</li>
+                <li data-i18n="changelog.v01Item3">Xác nhận tài khoản qua ảnh đại diện + UID trước khi vào bảng điều khiển.</li>
+                <li data-i18n="changelog.v01Item4">Trang Donate VietQR ACB tự động cập nhật nội dung và số tiền.</li>
+              </ul>
+            </div>
           </div>
         </aside>
       </div>
