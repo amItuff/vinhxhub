@@ -3,51 +3,48 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <meta name="theme-color" content="#0A0A09" />
+  <meta name="theme-color" content="#09090B" />
   <title>Vinhxhub 0.02 — Discord Automation</title>
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-  <link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,600;9..144,700&family=IBM+Plex+Mono:wght@400;500;600&family=IBM+Plex+Sans:wght@400;500;600;700&family=Space+Grotesk:wght@500;600;700&display=swap" rel="stylesheet" />
+  <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;600&family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap" rel="stylesheet" />
   <link rel="stylesheet" href="/styles.css" />
 </head>
 <body>
+  <div class="theme-backdrop" aria-hidden="true"></div>
+
   <header class="topbar">
     <div class="topbar-inner">
       <div class="brand">
-        <span class="brand-mark" aria-hidden="true">
-          <svg width="24" height="24" viewBox="0 0 36 32" fill="none" xmlns="http://www.w3.org/2000/svg">
-            <path d="M2 0H34V24H13L2 31V0Z" fill="#F2EFE9"/>
-            <path d="M12.5 8L7.5 12L12.5 16" stroke="#0A0A09" stroke-width="2.6" stroke-linecap="square" stroke-linejoin="miter"/>
-            <path d="M23.5 8L28.5 12L23.5 16" stroke="#0A0A09" stroke-width="2.6" stroke-linecap="square" stroke-linejoin="miter"/>
-            <path d="M19.8 7L16.2 17" stroke="#52525B" stroke-width="2.6" stroke-linecap="square"/>
-          </svg>
+        <span class="brand-mark">
+          <img
+            src="https://i.pinimg.com/736x/a0/b0/ef/a0b0efd6981149f381979129b96c2c26.jpg"
+            alt="Vinhxhub"
+            class="brand-logo-img"
+          />
         </span>
-        <span class="brand-name" translate="no">VINHXHUB</span>
-        <span class="brand-tag" translate="no">VERSION 0.02</span>
+        <span class="brand-name" translate="no">Vinhxhub</span>
+        <span class="brand-tag" translate="no">v0.02</span>
       </div>
 
       <nav class="nav-tabs" aria-label="Điều hướng chính" data-i18n-aria="nav.aria">
         <button type="button" class="nav-tab is-active" data-view="runner" id="nav-runner">
-          <span class="nav-index" translate="no">01</span>
           <span data-i18n="nav.runner">Quest Runner</span>
         </button>
         <button type="button" class="nav-tab" data-view="spoofer" id="nav-spoofer">
-          <span class="nav-index" translate="no">02</span>
           <span data-i18n="nav.spoofer">Badge Spoofer</span>
         </button>
         <button type="button" class="nav-tab" data-view="donate" id="nav-donate">
-          <span class="nav-index" translate="no">03</span>
           <span data-i18n="nav.donate">Donate</span>
         </button>
         <button type="button" class="nav-tab" data-view="faq" id="nav-faq">
-          <span class="nav-index" translate="no">04</span>
           <span data-i18n="nav.faq">FAQ</span>
         </button>
       </nav>
 
       <div class="topbar-right">
         <button type="button" class="btn-lang" id="btn-lang" aria-label="Switch language">
-          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="square" stroke-linejoin="miter" aria-hidden="true">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
             <circle cx="12" cy="12" r="10"></circle>
             <path d="M2 12h20"></path>
             <path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"></path>
@@ -64,7 +61,7 @@
             </div>
           </div>
           <button type="button" class="btn-ghost-sm" id="btn-logout" title="Đăng xuất" data-i18n-title="auth.logoutTitle">
-            <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="square" aria-hidden="true">
+            <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
               <path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"></path>
               <polyline points="16 17 21 12 16 7"></polyline>
               <line x1="21" y1="12" x2="9" y2="12"></line>
@@ -77,33 +74,31 @@
   </header>
 
   <main class="container">
-    <section class="masthead-strip stagger-1" aria-hidden="true">
+    <section class="masthead-strip anim-fade-up" aria-hidden="true">
       <div class="masthead-meta">
-        <span class="masthead-kicker" translate="no">VINHXHUB // DISCORD AUTOMATION SYSTEM</span>
-        <span class="masthead-kicker" translate="no">BUILD 0.02</span>
+        <span class="masthead-kicker" translate="no">VINHXHUB</span>
       </div>
       <div class="site-banner">
         <img
-          src="https://i.pinimg.com/originals/41/60/61/416061b9d95e206d7bbeb51e644cca6e.gif"
+          src="https://i.pinimg.com/originals/1e/f2/fc/1ef2fc665dfb0dbab5635ac2fb533623.gif"
           alt=""
           class="site-banner-img"
         />
-        <div class="site-banner-frame"></div>
       </div>
     </section>
 
     <section id="view-auth" class="view-section is-visible" aria-labelledby="auth-title">
       <div class="auth-layout">
-        <div class="editorial-block auth-card stagger-2">
+        <div class="panel-card auth-card anim-fade-up delay-1">
           <div id="auth-step-input">
             <div class="auth-header">
               <div class="status-chip">
                 <span class="dot dot-signal"></span>
                 <span data-i18n="auth.ephemeralChip">Token chỉ dùng tạm thời, không lưu lại</span>
               </div>
-              <h1 id="auth-title" class="display-title" data-i18n="auth.title">Xác thực Token.</h1>
+              <h1 id="auth-title" class="display-title" data-i18n="auth.title">Đăng nhập</h1>
               <p class="muted" data-i18n="auth.subtitle">
-                Nhập Discord User Token để kiểm tra tài khoản, tự động nhận và chạy song song toàn bộ Quest.
+                Nhập Discord User Token để tiếp tục.
               </p>
             </div>
 
@@ -122,7 +117,7 @@
                     required
                   />
                   <button type="button" class="input-icon-btn" id="btn-toggle-token" aria-label="Hiện hoặc ẩn token" data-i18n-aria="auth.toggleTokenAria">
-                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="square" stroke-linejoin="miter">
+                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
                       <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"></path>
                       <circle cx="12" cy="12" r="3"></circle>
                     </svg>
@@ -132,8 +127,8 @@
               </div>
 
               <button type="submit" class="btn-primary btn-full" id="btn-connect">
-                <span class="btn-label" data-i18n="auth.verifyBtn">Kiểm tra Token</span>
-                <svg class="btn-arrow" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="square" aria-hidden="true">
+                <span class="btn-label" data-i18n="auth.verifyBtn">Đăng nhập</span>
+                <svg class="btn-arrow" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
                   <line x1="5" y1="12" x2="19" y2="12"></line>
                   <polyline points="12 5 19 12 12 19"></polyline>
                 </svg>
@@ -165,11 +160,11 @@
           </div>
         </div>
 
-        <aside class="editorial-block changelog-card stagger-3" aria-labelledby="changelog-title">
+        <aside class="panel-card changelog-card anim-fade-up delay-2" aria-labelledby="changelog-title">
           <div class="changelog-header-bar">
             <div class="changelog-meta">
               <span class="dot dot-accent"></span>
-              <span translate="no">VINHXHUB</span>
+              <span translate="no">Vinhxhub</span>
               <span class="muted-inline" id="changelog-date" translate="no">18.11.2026</span>
             </div>
             <div class="version-switcher" role="tablist" aria-label="Phiên bản">
@@ -180,16 +175,16 @@
 
           <div class="changelog-issue-row">
             <h2 id="changelog-title" class="changelog-heading" translate="no">0.02</h2>
-            <span class="changelog-tag" id="changelog-badge" data-i18n="changelog.v02Tag">PHIÊN BẢN MỚI</span>
+            <span class="changelog-tag" id="changelog-badge" data-i18n="changelog.v02Tag">Phiên bản mới</span>
           </div>
 
           <div class="changelog-pane" id="changelog-v02">
             <div class="changelog-body">
               <span class="changelog-label" data-i18n="changelog.changes">Tính năng</span>
               <ul class="changelog-list">
-                <li data-i18n="changelog.v02Item1">Xây dựng lại toàn bộ giao diện Monochrome Swiss Editorial &amp; hệ thống chuyển động mượt.</li>
+                <li data-i18n="changelog.v02Item1">Làm mới toàn bộ giao diện theo chủ đề động, loại bỏ viền xám và thay thế hệ thống animation.</li>
                 <li data-i18n="changelog.v02Item2">Sửa lỗi timeout khi kết nối Token trên Vercel, tự động lọc dấu ngoặc kép và hỗ trợ phiên mã hóa AES-GCM.</li>
-                <li data-i18n="changelog.v02Item3">Thêm trang FAQ liệt kê đầy đủ bằng chứng an toàn và chuyển đổi song ngữ VI / EN.</li>
+                <li data-i18n="changelog.v02Item3">Bổ sung trang FAQ bằng chứng an toàn, liên kết mã nguồn mở GitHub và chuyển đổi song ngữ VI / EN.</li>
                 <li data-i18n="changelog.v02Item4">Định tuyến đường dẫn sạch (/questrunner, /badgespoofer, /donate, /faq).</li>
               </ul>
             </div>
@@ -213,26 +208,25 @@
     <section id="view-dashboard" class="view-section" hidden aria-labelledby="dash-title">
       <div class="dash-header">
         <div class="dash-title-wrap">
-          <span class="section-index" translate="no">01 / QUEST ENGINE</span>
           <h1 id="dash-title" class="display-title" data-i18n="dash.title">Bảng điều khiển Quest</h1>
           <p class="muted" data-i18n="dash.subtitle">Tự động nhận quest mới và chạy song song ở tốc độ an toàn tối đa.</p>
         </div>
         <div class="dash-controls">
           <button type="button" class="btn-secondary" id="btn-refresh">
-            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="square" stroke-linejoin="miter" aria-hidden="true">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
               <polyline points="23 4 23 10 17 10"></polyline>
               <path d="M20.49 15a9 9 0 1 1-2.12-9.36L23 10"></path>
             </svg>
             <span data-i18n="dash.refresh">Làm mới</span>
           </button>
           <button type="button" class="btn-primary" id="btn-start-all">
-            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="square" stroke-linejoin="miter" aria-hidden="true">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
               <polygon points="5 3 19 12 5 21 5 3"></polygon>
             </svg>
             <span data-i18n="dash.startAll">Chạy tất cả</span>
           </button>
           <button type="button" class="btn-danger" id="btn-stop" hidden>
-            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="square" stroke-linejoin="miter" aria-hidden="true">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
               <rect x="6" y="6" width="12" height="12"></rect>
             </svg>
             <span data-i18n="dash.stop">Dừng lại</span>
@@ -241,15 +235,15 @@
       </div>
 
       <div class="stats-grid-3">
-        <div class="editorial-block stat-card">
+        <div class="panel-card stat-card">
           <span class="stat-label" data-i18n="dash.statTotal">Tổng Quest</span>
           <strong class="stat-value" id="stat-total">0</strong>
         </div>
-        <div class="editorial-block stat-card">
+        <div class="panel-card stat-card">
           <span class="stat-label" data-i18n="dash.statActive">Đang chạy song song</span>
           <strong class="stat-value text-accent" id="stat-active">0</strong>
         </div>
-        <div class="editorial-block stat-card">
+        <div class="panel-card stat-card">
           <span class="stat-label" data-i18n="dash.statCompleted">Đã hoàn thành</span>
           <strong class="stat-value text-signal" id="stat-completed">0</strong>
         </div>
@@ -264,11 +258,11 @@
           <div id="quests-list" class="quests-list"></div>
         </div>
 
-        <aside class="terminal-panel editorial-block">
+        <aside class="terminal-panel panel-card">
           <div class="panel-head terminal-head">
             <div class="terminal-title">
               <span class="dot" id="engine-status-dot"></span>
-              <h2 translate="no">TELEMETRY LOG</h2>
+              <h2 translate="no">Telemetry Log</h2>
             </div>
             <button type="button" class="btn-ghost-sm" id="btn-clear-log" data-i18n="common.clearLog">Xóa log</button>
           </div>
@@ -285,7 +279,6 @@
     <section id="view-spoofer" class="view-section" hidden aria-labelledby="spoofer-title">
       <div class="dash-header">
         <div class="dash-title-wrap">
-          <span class="section-index" translate="no">02 / SCIENCE TELEMETRY</span>
           <h1 id="spoofer-title" class="display-title">Discord Badge Spoofer</h1>
           <p class="muted" data-i18n="spoofer.subtitle">Gửi sự kiện launch_game và running_game_heartbeat tới /api/v9/science theo số game và thời gian tùy chỉnh.</p>
         </div>
@@ -302,7 +295,7 @@
       </div>
 
       <div class="workspace-grid">
-        <div class="editorial-block spoofer-form-card">
+        <div class="panel-card spoofer-form-card">
           <form id="spoofer-form" class="spoofer-form">
             <div class="spoofer-row-2">
               <div class="field-group">
@@ -349,11 +342,11 @@
           </form>
         </div>
 
-        <aside class="terminal-panel editorial-block">
+        <aside class="terminal-panel panel-card">
           <div class="panel-head terminal-head">
             <div class="terminal-title">
               <span class="dot" id="spoofer-status-dot"></span>
-              <h2 translate="no">SPOOFER LOG</h2>
+              <h2 translate="no">Spoofer Log</h2>
             </div>
             <button type="button" class="btn-ghost-sm" id="btn-clear-spoof-log" data-i18n="common.clearLog">Xóa log</button>
           </div>
@@ -369,13 +362,12 @@
 
     <section id="view-donate" class="view-section" hidden aria-labelledby="donate-title">
       <div class="donate-shell">
-        <div class="editorial-block donate-card">
+        <div class="panel-card donate-card">
           <div class="donate-info">
             <div class="status-chip">
               <span class="dot dot-signal"></span>
-              <span translate="no">VIETQR NAPAS 24/7</span>
+              <span translate="no">VietQR NAPAS 24/7</span>
             </div>
-            <span class="section-index" translate="no">03 / SUPPORT</span>
             <h1 id="donate-title" class="display-title" data-i18n="donate.title">Ủng hộ phát triển</h1>
             <p class="muted" data-i18n="donate.subtitle">
               Nếu công cụ giúp bạn tiết kiệm thời gian làm Discord Quest, bạn có thể ủng hộ tác giả qua chuyển khoản ngân hàng ACB bên dưới.
@@ -437,14 +429,13 @@
     <section id="view-faq" class="view-section" hidden aria-labelledby="faq-title">
       <div class="dash-header">
         <div class="dash-title-wrap">
-          <span class="section-index" translate="no">04 / TRANSPARENCY &amp; SAFETY</span>
           <h1 id="faq-title" class="display-title" data-i18n="faq.title">Câu hỏi &amp; Bằng chứng An toàn</h1>
           <p class="muted" data-i18n="faq.subtitle">Tất cả cơ chế xử lý token, lưu trữ phiên và giới hạn tốc độ đều minh bạch dựa trên mã nguồn thực tế.</p>
         </div>
       </div>
 
       <div class="faq-grid">
-        <article class="editorial-block faq-item">
+        <article class="panel-card faq-item">
           <div class="faq-head">
             <span class="faq-num" translate="no">01</span>
             <h2 data-i18n="faq.q1">Token có bị lưu vào ổ đĩa hay cơ sở dữ liệu không?</h2>
@@ -453,16 +444,16 @@
           <code class="faq-proof" translate="no">server.js → const sessions = new Map() // In-memory ephemeral sessions</code>
         </article>
 
-        <article class="editorial-block faq-item">
+        <article class="panel-card faq-item">
           <div class="faq-head">
             <span class="faq-num" translate="no">02</span>
             <h2 data-i18n="faq.q2">Trình duyệt lưu gì khi giữ phiên sau khi F5?</h2>
           </div>
-          <p class="faq-ans" data-i18n="faq.a2">Trình duyệt chỉ lưu duy nhất mã phiên ngẫu nhiên UUID (vinhxhub_session_id) trong localStorage. Discord Token gốc không bao giờ được lưu trong localStorage, cookie hay DOM.</p>
+          <p class="faq-ans" data-i18n="faq.a2">Trình duyệt chỉ lưu duy nhất mã phiên ngẫu nhiên / mã phiên mã hóa AES-GCM (vinhxhub_session_id) trong localStorage. Discord Token gốc không bao giờ được lưu trong localStorage, cookie hay DOM.</p>
           <code class="faq-proof" translate="no">app.js → localStorage.setItem('vinhxhub_session_id', id)</code>
         </article>
 
-        <article class="editorial-block faq-item">
+        <article class="panel-card faq-item">
           <div class="faq-head">
             <span class="faq-num" translate="no">03</span>
             <h2 data-i18n="faq.q3">Khi bấm Thoát hoặc không dùng nữa thì sao?</h2>
@@ -471,7 +462,7 @@
           <code class="faq-proof" translate="no">server.js → sessions.delete(req.sessionId) &amp; 6h TTL cleanup</code>
         </article>
 
-        <article class="editorial-block faq-item">
+        <article class="panel-card faq-item">
           <div class="faq-head">
             <span class="faq-num" translate="no">04</span>
             <h2 data-i18n="faq.q4">Cơ chế chống Rate Limit và bảo vệ tài khoản?</h2>
@@ -480,7 +471,7 @@
           <code class="faq-proof" translate="no">server.js → heartbeatIntervalMs: 16500, heartbeatJitterMs: 1500, HTTP 429 backoff</code>
         </article>
 
-        <article class="editorial-block faq-item">
+        <article class="panel-card faq-item">
           <div class="faq-head">
             <span class="faq-num" translate="no">05</span>
             <h2 data-i18n="faq.q5">Web kết nối tới những máy chủ nào?</h2>
@@ -489,13 +480,35 @@
           <code class="faq-proof" translate="no">discord.com/api/v9 · cdn.discordapp.com · cordapi.dolfi.es</code>
         </article>
 
-        <article class="editorial-block faq-item">
+        <article class="panel-card faq-item">
           <div class="faq-head">
             <span class="faq-num" translate="no">06</span>
             <h2 data-i18n="faq.q6">Các lớp bảo vệ HTTP trên server là gì?</h2>
           </div>
           <p class="faq-ans" data-i18n="faq.a6">Express bật sẵn header chống nhúng iframe (X-Frame-Options: DENY), chống đoán MIME (X-Content-Type-Options: nosniff), giới hạn Referrer-Policy và giới hạn payload JSON tối đa 128KB.</p>
           <code class="faq-proof" translate="no">X-Frame-Options: DENY · nosniff · express.json({ limit: '128kb' })</code>
+        </article>
+
+        <article class="panel-card faq-item faq-item-wide">
+          <div class="faq-head">
+            <span class="faq-num" translate="no">07</span>
+            <h2 data-i18n="faq.q7">Mã nguồn mở (Open Source)</h2>
+          </div>
+          <p class="faq-ans" data-i18n="faq.a7">Toàn bộ mã nguồn được công khai trên GitHub để cộng đồng tự do kiểm tra, đối chiếu từng dòng code xử lý token và tự triển khai (self-host) nếu muốn.</p>
+          <a
+            href="https://github.com/amItuff/vinhxhub"
+            target="_blank"
+            rel="noopener noreferrer"
+            class="faq-link-btn"
+            translate="no"
+          >
+            <span>github.com/amItuff/vinhxhub</span>
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+              <path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"></path>
+              <polyline points="15 3 21 3 21 9"></polyline>
+              <line x1="10" y1="14" x2="21" y2="3"></line>
+            </svg>
+          </a>
         </article>
       </div>
     </section>
