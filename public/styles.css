@@ -1,35 +1,34 @@
 /* ==========================================================================
-   VINHXHUB 0.01 — MONOCHROME SWISS EDITORIAL / BRUTALIST DESIGN SYSTEM
-   Palette (Strictly monochrome grayscale, zero purple/blue/loud gradients):
-     1. #0C0C0B  — Carbon Ink (Background)
-     2. #141412  — Charcoal Surface (Panels & Cards)
+   VINHXHUB 0.02 — REBUILT MONOCHROME SWISS EDITORIAL / BRUTALIST SYSTEM
+   Palette (4 core monochrome hex tones):
+     1. #0A0A09  — Carbon Ink (Background)
+     2. #131311  — Charcoal Surface (Panels & Cards)
      3. #F2EFE9  — Newsprint Cream (Primary Text & Active Surfaces)
      4. #8E8E93  — Ash Gray (Secondary Text, Accents & Borders)
    Fonts:
      - Display / Headings: 'Space Grotesk', 'Fraunces'
      - Body: 'IBM Plex Sans'
      - Mono: 'IBM Plex Mono'
-     (Strictly NO Inter, NO Roboto)
    ========================================================================== */
 
 :root {
   color-scheme: dark;
-  --ink-bg: #0C0C0B;
-  --ink-surface: #141412;
-  --ink-elevated: #1C1C1A;
+  --ink-bg: #0A0A09;
+  --ink-surface: #131311;
+  --ink-elevated: #1C1C19;
   --paper: #F2EFE9;
   --ash: #8E8E93;
   --ash-bright: #D4D4D8;
-  --ash-dim: rgba(142, 142, 147, 0.14);
   --hairline: rgba(242, 239, 233, 0.14);
-  --hairline-strong: rgba(242, 239, 233, 0.32);
+  --hairline-strong: rgba(242, 239, 233, 0.34);
 
   --font-display: 'Space Grotesk', sans-serif;
   --font-serif: 'Fraunces', Georgia, serif;
   --font-body: 'IBM Plex Sans', -apple-system, BlinkMacSystemFont, sans-serif;
   --font-mono: 'IBM Plex Mono', monospace;
 
-  --ease-editorial: cubic-bezier(0.16, 1, 0.3, 1);
+  --ease-out: cubic-bezier(0.16, 1, 0.3, 1);
+  --ease-snap: cubic-bezier(0.2, 0.8, 0.2, 1);
 }
 
 [hidden] {
@@ -51,6 +50,67 @@ html, body {
   line-height: 1.55;
   -webkit-font-smoothing: antialiased;
 }
+
+/* ─── Keyframes & Motion System ─────────────────────────────────────────── */
+@keyframes revealUp {
+  from {
+    opacity: 0;
+    transform: translateY(14px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes revealSlideRight {
+  from {
+    opacity: 0;
+    transform: translateX(-10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateX(0);
+  }
+}
+
+@keyframes inputShake {
+  0%, 100% { transform: translateX(0); }
+  18% { transform: translateX(-7px); }
+  36% { transform: translateX(7px); }
+  54% { transform: translateX(-5px); }
+  72% { transform: translateX(4px); }
+  90% { transform: translateX(-2px); }
+}
+
+@keyframes errorSlideIn {
+  from {
+    opacity: 0;
+    transform: translateY(-6px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes pulseHard {
+  0%, 100% { opacity: 1; transform: scale(1); }
+  50% { opacity: 0.3; transform: scale(0.85); }
+}
+
+@keyframes progressBarber {
+  from { background-position: 0 0; }
+  to { background-position: 17px 0; }
+}
+
+@keyframes spin {
+  to { transform: rotate(360deg); }
+}
+
+.stagger-1 { animation: revealUp 420ms var(--ease-out) 0ms both; }
+.stagger-2 { animation: revealUp 460ms var(--ease-out) 70ms both; }
+.stagger-3 { animation: revealUp 500ms var(--ease-out) 140ms both; }
 
 /* ─── Topbar ────────────────────────────────────────────────────────────── */
 .topbar {
@@ -84,6 +144,11 @@ html, body {
   justify-content: center;
   width: 26px;
   height: 26px;
+  transition: transform 220ms var(--ease-out);
+}
+
+.brand:hover .brand-mark {
+  transform: translateY(-1px);
 }
 
 .brand-name {
@@ -114,6 +179,7 @@ html, body {
 }
 
 .nav-tab {
+  position: relative;
   display: inline-flex;
   align-items: center;
   gap: 7px;
@@ -130,7 +196,7 @@ html, body {
   text-transform: uppercase;
   cursor: pointer;
   touch-action: manipulation;
-  transition: color 140ms var(--ease-editorial), background-color 140ms var(--ease-editorial);
+  transition: color 160ms var(--ease-out), background-color 160ms var(--ease-out);
 }
 
 .nav-tab:last-child {
@@ -177,12 +243,16 @@ html, body {
   font-weight: 600;
   letter-spacing: 0.05em;
   cursor: pointer;
-  transition: border-color 140ms var(--ease-editorial), background-color 140ms var(--ease-editorial);
+  transition: border-color 160ms var(--ease-out), background-color 160ms var(--ease-out), transform 90ms var(--ease-out);
 }
 
 .btn-lang:hover {
   border-color: var(--paper);
   background: var(--ink-elevated);
+}
+
+.btn-lang:active {
+  transform: translateY(1px);
 }
 
 .topbar-actions {
@@ -291,24 +361,14 @@ html, body {
 
 /* ─── View Transitions & Editorial Blocks ───────────────────────────────── */
 .view-section {
-  animation: editorialEnter 280ms var(--ease-editorial) both;
-}
-
-@keyframes editorialEnter {
-  from {
-    opacity: 0;
-    transform: translateY(10px);
-  }
-  to {
-    opacity: 1;
-    transform: translateY(0);
-  }
+  animation: revealUp 320ms var(--ease-out) both;
 }
 
 .editorial-block {
   background: var(--ink-surface);
   border: 1px solid var(--hairline);
   position: relative;
+  transition: border-color 180ms var(--ease-out);
 }
 
 .section-index {
@@ -371,7 +431,7 @@ h2 {
   width: 7px;
   height: 7px;
   background: var(--ash);
-  transition: background-color 180ms var(--ease-editorial);
+  transition: background-color 180ms var(--ease-out);
 }
 
 .dot-signal {
@@ -385,11 +445,6 @@ h2 {
 .dot-pulse {
   background: var(--paper);
   animation: pulseHard 1.1s steps(2, start) infinite;
-}
-
-@keyframes pulseHard {
-  0%, 100% { opacity: 1; }
-  50% { opacity: 0.25; }
 }
 
 /* ─── Asymmetric Auth Layout ────────────────────────────────────────────── */
@@ -439,7 +494,7 @@ h2 {
   color: var(--paper);
   font-family: var(--font-mono);
   font-size: 13px;
-  transition: border-color 140ms var(--ease-editorial), background-color 140ms var(--ease-editorial);
+  transition: border-color 160ms var(--ease-out), background-color 160ms var(--ease-out);
 }
 
 .input-wrap input {
@@ -475,22 +530,13 @@ button:focus-visible {
   color: var(--paper);
 }
 
-/* Error Shake & Reveal Animation for "Vui lòng nhập Discord Token." */
 .input-wrap.is-invalid input {
   border-color: var(--paper);
   background: var(--ink-elevated);
 }
 
 .input-wrap.is-shaking {
-  animation: inputShake 360ms var(--ease-editorial);
-}
-
-@keyframes inputShake {
-  0%, 100% { transform: translateX(0); }
-  20% { transform: translateX(-6px); }
-  40% { transform: translateX(6px); }
-  60% { transform: translateX(-4px); }
-  80% { transform: translateX(3px); }
+  animation: inputShake 380ms var(--ease-out);
 }
 
 .field-error {
@@ -500,22 +546,11 @@ button:focus-visible {
   color: var(--paper);
   border-left: 2px solid var(--paper);
   padding-left: 8px;
-  animation: errorSlideIn 220ms var(--ease-editorial) both;
-}
-
-@keyframes errorSlideIn {
-  from {
-    opacity: 0;
-    transform: translateY(-4px);
-  }
-  to {
-    opacity: 1;
-    transform: translateY(0);
-  }
+  animation: errorSlideIn 220ms var(--ease-out) both;
 }
 
 .confirm-box {
-  animation: editorialEnter 220ms var(--ease-editorial) both;
+  animation: revealUp 240ms var(--ease-out) both;
 }
 
 .confirm-account-card {
@@ -575,11 +610,19 @@ button:focus-visible {
   flex: 1;
 }
 
-/* Offset Editorial Feature Column */
+/* ─── Offset Version History Column (v0.02 vs v0.01) ────────────────────── */
 .changelog-card {
   padding: 28px;
   margin-top: 28px;
   border-left: 3px solid var(--ash-bright);
+}
+
+.changelog-header-bar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  margin-bottom: 14px;
 }
 
 .changelog-meta {
@@ -589,11 +632,38 @@ button:focus-visible {
   font-family: var(--font-mono);
   font-size: 11px;
   letter-spacing: 0.06em;
-  margin-bottom: 14px;
 }
 
 .muted-inline {
   color: var(--ash);
+}
+
+.version-switcher {
+  display: inline-flex;
+  border: 1px solid var(--hairline);
+  background: var(--ink-bg);
+}
+
+.ver-tab {
+  height: 26px;
+  padding: 0 10px;
+  border: 0;
+  background: transparent;
+  color: var(--ash);
+  font-family: var(--font-mono);
+  font-size: 11px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background-color 150ms var(--ease-out), color 150ms var(--ease-out);
+}
+
+.ver-tab:hover {
+  color: var(--paper);
+}
+
+.ver-tab.is-active {
+  background: var(--paper);
+  color: var(--ink-bg);
 }
 
 .changelog-issue-row {
@@ -619,6 +689,10 @@ button:focus-visible {
   font-size: 10.5px;
   color: var(--ash);
   letter-spacing: 0.08em;
+}
+
+.changelog-pane {
+  animation: revealSlideRight 220ms var(--ease-out) both;
 }
 
 .changelog-body {
@@ -672,7 +746,7 @@ button {
   cursor: pointer;
   touch-action: manipulation;
   user-select: none;
-  transition: transform 90ms var(--ease-editorial), background-color 140ms var(--ease-editorial), color 140ms var(--ease-editorial), border-color 140ms var(--ease-editorial);
+  transition: transform 100ms var(--ease-snap), background-color 160ms var(--ease-out), color 160ms var(--ease-out), border-color 160ms var(--ease-out);
 }
 
 .btn-primary {
@@ -689,11 +763,11 @@ button {
 }
 
 .btn-primary:hover:not(:disabled) .btn-arrow {
-  transform: translateX(3px);
+  transform: translateX(4px);
 }
 
 .btn-arrow {
-  transition: transform 160ms var(--ease-editorial);
+  transition: transform 180ms var(--ease-out);
 }
 
 .btn-primary:active:not(:disabled),
@@ -763,14 +837,10 @@ button {
 .spinner {
   width: 14px;
   height: 14px;
-  border: 2px solid rgba(12, 12, 11, 0.25);
+  border: 2px solid rgba(10, 10, 9, 0.25);
   border-top-color: var(--ink-bg);
   border-radius: 50%;
   animation: spin 0.7s linear infinite;
-}
-
-@keyframes spin {
-  to { transform: rotate(360deg); }
 }
 
 /* ─── Dashboard & Stats ─────────────────────────────────────────────────── */
@@ -862,7 +932,7 @@ button {
 
 .quest-card {
   padding: 20px 22px;
-  transition: border-color 160ms var(--ease-editorial);
+  animation: revealUp 260ms var(--ease-out) both;
 }
 
 .quest-card:hover {
@@ -931,7 +1001,7 @@ button {
   height: 100%;
   background: var(--ash-bright);
   position: relative;
-  transition: width 360ms var(--ease-editorial), background-color 200ms var(--ease-editorial);
+  transition: width 360ms var(--ease-out), background-color 200ms var(--ease-out);
 }
 
 .progress-fill.is-active::after {
@@ -940,18 +1010,13 @@ button {
   inset: 0;
   background-image: repeating-linear-gradient(
     -45deg,
-    rgba(12, 12, 11, 0.3) 0px,
-    rgba(12, 12, 11, 0.3) 6px,
+    rgba(10, 10, 9, 0.3) 0px,
+    rgba(10, 10, 9, 0.3) 6px,
     transparent 6px,
     transparent 12px
   );
   background-size: 17px 17px;
   animation: progressBarber 0.7s linear infinite;
-}
-
-@keyframes progressBarber {
-  from { background-position: 0 0; }
-  to { background-position: 17px 0; }
 }
 
 .progress-fill.is-done {
@@ -994,6 +1059,7 @@ button {
   gap: 10px;
   margin-bottom: 5px;
   word-break: break-word;
+  animation: revealSlideRight 160ms var(--ease-out) both;
 }
 
 .log-ts {
@@ -1199,11 +1265,12 @@ button {
   flex-direction: column;
   gap: 12px;
   border-left: 3px solid var(--hairline-strong);
-  transition: border-color 160ms var(--ease-editorial);
+  transition: border-color 180ms var(--ease-out), transform 180ms var(--ease-out);
 }
 
 .faq-item:hover {
   border-left-color: var(--paper);
+  transform: translateY(-2px);
 }
 
 .faq-head {
@@ -1264,7 +1331,7 @@ button {
   font-family: var(--font-display);
   font-size: 13px;
   font-weight: 600;
-  animation: editorialEnter 180ms var(--ease-editorial) both;
+  animation: revealUp 200ms var(--ease-out) both;
 }
 
 /* ─── Responsive ────────────────────────────────────────────────────────── */
