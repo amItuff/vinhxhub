@@ -34,12 +34,17 @@
       'confirm.subtitle': 'Kiểm tra ảnh đại diện và UID trước khi vào bảng điều khiển.',
       'confirm.cancel': 'Đổi token khác',
       'confirm.enter': 'Xác nhận & Vào ngay',
-      'changelog.releaseTag': 'CHỨC NĂNG CHÍNH',
+      'changelog.v02Tag': 'PHIÊN BẢN MỚI',
+      'changelog.v01Tag': 'PHIÊN BẢN CŨ',
       'changelog.changes': 'Tính năng',
-      'changelog.item1': 'Auto Quest Runner: tự nhận và chạy song song toàn bộ Quest (Video, Play, Stream, Activity) theo thời gian thực.',
-      'changelog.item2': 'Badge Spoofer: gửi sự kiện Game Time & Game Variety qua /api/v9/science với số game và số giờ tùy chỉnh.',
-      'changelog.item3': 'Xác thực an toàn: đối chiếu ảnh đại diện + UID trước khi vào, phiên chỉ lưu tạm trong RAM server.',
-      'changelog.item4': 'Hỗ trợ song ngữ VI/EN, VietQR Donate và trang FAQ minh bạch cơ chế bảo mật.',
+      'changelog.v02Item1': 'Xây dựng lại toàn bộ giao diện Monochrome Swiss Editorial & hệ thống chuyển động mượt.',
+      'changelog.v02Item2': 'Sửa lỗi timeout khi kết nối Token trên Vercel, tự động lọc dấu ngoặc kép và hỗ trợ phiên mã hóa AES-GCM.',
+      'changelog.v02Item3': 'Thêm trang FAQ liệt kê đầy đủ bằng chứng an toàn và chuyển đổi song ngữ VI / EN.',
+      'changelog.v02Item4': 'Định tuyến đường dẫn sạch (/questrunner, /badgespoofer, /donate, /faq).',
+      'changelog.v01Item1': 'Auto Quest Runner: tự nhận và chạy song song toàn bộ Quest (Video, Play, Stream, Activity).',
+      'changelog.v01Item2': 'Badge Spoofer: gửi sự kiện Game Time & Game Variety qua /api/v9/science.',
+      'changelog.v01Item3': 'Xác nhận tài khoản qua ảnh đại diện + UID trước khi vào bảng điều khiển.',
+      'changelog.v01Item4': 'Trang Donate VietQR ACB tự động cập nhật nội dung và số tiền.',
       'dash.title': 'Bảng điều khiển Quest',
       'dash.subtitle': 'Tự động nhận quest mới và chạy song song ở tốc độ an toàn tối đa.',
       'dash.refresh': 'Làm mới',
@@ -122,12 +127,17 @@
       'confirm.subtitle': 'Check your avatar and UID before entering the dashboard.',
       'confirm.cancel': 'Use another token',
       'confirm.enter': 'Confirm & Enter',
-      'changelog.releaseTag': 'CORE FEATURES',
+      'changelog.v02Tag': 'NEW RELEASE',
+      'changelog.v01Tag': 'PREVIOUS',
       'changelog.changes': 'Features',
-      'changelog.item1': 'Auto Quest Runner: auto-enrolls and executes all Quests (Video, Play, Stream, Activity) in parallel with live telemetry.',
-      'changelog.item2': 'Badge Spoofer: dispatches Game Time & Game Variety events to /api/v9/science with custom game count and hours.',
-      'changelog.item3': 'Safe Verification: confirms Avatar + UID before entry; sessions remain strictly ephemeral in server RAM.',
-      'changelog.item4': 'Bilingual VI/EN interface, dynamic VietQR Donate, and a transparent Security FAQ.',
+      'changelog.v02Item1': 'Rebuilt entire Monochrome Swiss Editorial UI & smooth motion system.',
+      'changelog.v02Item2': 'Fixed Vercel token connection timeout, auto-stripped pasted quotes, and added AES-GCM session fallback.',
+      'changelog.v02Item3': 'Added Safety Evidence FAQ page and full VI / EN bilingual switcher.',
+      'changelog.v02Item4': 'Clean SPA routing (/questrunner, /badgespoofer, /donate, /faq).',
+      'changelog.v01Item1': 'Auto Quest Runner: auto-enrolls and runs all Quests (Video, Play, Stream, Activity) in parallel.',
+      'changelog.v01Item2': 'Badge Spoofer: dispatches Game Time & Game Variety events via /api/v9/science.',
+      'changelog.v01Item3': 'Account confirmation via Avatar + UID before entering the dashboard.',
+      'changelog.v01Item4': 'Dynamic VietQR ACB Donate page with preset amount selection.',
       'dash.title': 'Quest Dashboard',
       'dash.subtitle': 'Automatically enroll new quests and execute them in parallel at maximum safe speed.',
       'dash.refresh': 'Refresh',
@@ -190,6 +200,7 @@
 
   const state = {
     lang: 'vi',
+    changelogVer: '0.02',
     sessionId: null,
     pendingAuth: null,
     user: null,
@@ -230,6 +241,13 @@
     btnToggleToken: document.getElementById('btn-toggle-token'),
     btnConnect: document.getElementById('btn-connect'),
     authError: document.getElementById('auth-error'),
+    verTab02: document.getElementById('ver-tab-02'),
+    verTab01: document.getElementById('ver-tab-01'),
+    changelogTitle: document.getElementById('changelog-title'),
+    changelogDate: document.getElementById('changelog-date'),
+    changelogBadge: document.getElementById('changelog-badge'),
+    changelogV02: document.getElementById('changelog-v02'),
+    changelogV01: document.getElementById('changelog-v01'),
     btnRefresh: document.getElementById('btn-refresh'),
     btnStartAll: document.getElementById('btn-start-all'),
     btnStop: document.getElementById('btn-stop'),
@@ -279,6 +297,18 @@
     return str;
   }
 
+  function switchChangelogVersion(ver) {
+    state.changelogVer = ver;
+    const is02 = ver === '0.02';
+    els.verTab02.classList.toggle('is-active', is02);
+    els.verTab01.classList.toggle('is-active', !is02);
+    els.changelogTitle.textContent = ver;
+    els.changelogDate.textContent = is02 ? '18.11.2026' : '16.11.2026';
+    els.changelogBadge.textContent = t(is02 ? 'changelog.v02Tag' : 'changelog.v01Tag');
+    els.changelogV02.hidden = !is02;
+    els.changelogV01.hidden = is02;
+  }
+
   function applyTranslations() {
     document.documentElement.lang = state.lang;
     els.langLabel.textContent = state.lang === 'vi' ? 'VI / EN' : 'EN / VI';
@@ -295,6 +325,8 @@
     document.querySelectorAll('[data-i18n-title]').forEach((el) => {
       el.title = t(el.dataset.i18nTitle);
     });
+
+    switchChangelogVersion(state.changelogVer);
 
     if (!els.authError.hidden && !els.tokenInput.value.trim()) {
       els.authError.textContent = t('auth.emptyTokenError');
@@ -546,7 +578,13 @@
       headers['Content-Type'] = 'application/json';
     }
     const res = await fetch(url, { ...options, headers });
-    const data = await res.json().catch(() => ({}));
+    const text = await res.text();
+    let data = {};
+    try {
+      data = text ? JSON.parse(text) : {};
+    } catch {
+      data = {};
+    }
     if (!res.ok) {
       throw new Error(data.error || `HTTP ${res.status}`);
     }
@@ -709,6 +747,9 @@
     setLanguage(state.lang === 'vi' ? 'en' : 'vi');
   });
 
+  els.verTab02.addEventListener('click', () => switchChangelogVersion('0.02'));
+  els.verTab01.addEventListener('click', () => switchChangelogVersion('0.01'));
+
   els.navRunner.addEventListener('click', () => switchView('runner'));
   els.navSpoofer.addEventListener('click', () => switchView('spoofer'));
   els.navDonate.addEventListener('click', () => switchView('donate'));
@@ -731,10 +772,10 @@
 
   els.authForm.addEventListener('submit', async (e) => {
     e.preventDefault();
-    const token = els.tokenInput.value.trim();
+    const raw = els.tokenInput.value.trim().replace(/^["']|["']$/g, '').trim();
     clearAuthError();
 
-    if (!token) {
+    if (!raw) {
       triggerAuthError(t('auth.emptyTokenError'));
       els.tokenInput.focus();
       return;
@@ -751,7 +792,7 @@
     try {
       const res = await apiFetch('/api/auth/verify', {
         method: 'POST',
-        body: JSON.stringify({ token }),
+        body: JSON.stringify({ token: raw }),
       });
 
       state.pendingAuth = res;
